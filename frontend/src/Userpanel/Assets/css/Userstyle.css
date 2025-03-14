@@ -1,0 +1,47 @@
+/* Progress Bar Styles */
+.progress-bar-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.progress-step .step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.progress-step.completed .step-number {
+  background-color: #582105;
+  color: white;
+}
+
+.progress-step.active .step-number {
+  background-color: #a44a1e;
+  color: white;
+}
+
+.progress-step .step-title {
+  font-size: 14px;
+  color: #6c757d;
+  text-align: center;
+}
+
+.progress-step.completed .step-title,
+.progress-step.active .step-title {
+  color: #582105;
+  font-weight: bold;
+}
