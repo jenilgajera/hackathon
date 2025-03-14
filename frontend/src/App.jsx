@@ -1,14 +1,13 @@
-// import Landing_app from './Landingpage/L_Components/Landing_app'
-
-import UserApp from "./Userpanel/U_Components/UserApp";
+import { useState } from 'react'
+import Landing_app from './Landingpage/L_Components/Landing_app'
 
 function App() {
+
   return (
     <>
-      {/* <Landing_app/> */}
-      <UserApp />
+    <Landing_app/>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

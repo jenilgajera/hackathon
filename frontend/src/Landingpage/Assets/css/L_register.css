@@ -1,0 +1,105 @@
+/* Register Page Styling */
+.register-page {
+  display: flex;
+  font-family: "Poppins", sans-serif;
+  background: url("../image/a.jpg") no-repeat center center fixed;
+  background-size: cover;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Card Styling */
+.register-form {
+  background: linear-gradient(
+    to right,
+    #582105,
+    #a44a1e
+  ); /* Semi-transparent white background */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  opacity: 0.7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* Increased width */
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: white;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+/* Radio Buttons Styling */
+.form-check-inline {
+  margin-right: 15px;
+}
+
+.form-check-input {
+  margin-right: 5px;
+}
+
+/* Buttons Styling */
+.btn-primary {
+  background: linear-gradient(
+    to right,
+    #582105,
+    #a44a1e
+  ); /* Gradient background */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.btn-primary:hover {
+  transform: scale(1.05); /* Slightly scale up on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+.btn-danger {
+  background: linear-gradient(#582105, #a44a1e); /* Gradient background */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
+}
+
+.btn-danger:hover {
+  transform: scale(1.05); /* Slightly scale up on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .col-md-4 {
+    margin-bottom: 15px;
+  }
+
+  .register-form {
+    padding: 15px;
+  }
+}

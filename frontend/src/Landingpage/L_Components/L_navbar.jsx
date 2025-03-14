@@ -1,6 +1,7 @@
 import React from "react";
 import "../Assets/css/L_navbar.css";
 import logo from "../Assets/image/logo.png";
+import { Link } from "react-router-dom";
 
 const L_navbar = () => {
   return (
@@ -31,32 +32,35 @@ const L_navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div
+          className="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
+              <Link className="nav-link active" aria-current="page" to={"/"}>
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to={"/Apply"}>
                 Apply
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to={"/Track"}>
                 Track
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to={"/Login"}>
                 Login
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" to={"/Register"}>
                 Register
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
