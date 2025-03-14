@@ -1,0 +1,31 @@
+/* Note Container */
+.note-container {
+    border: 2px solid #582105; /* Add a border to the container */
+    padding-top: 40px; /* Add padding to accommodate the note label */
+    position: relative; /* Required for absolute positioning of the label */
+  }
+  
+  /* Note Label */
+  .note-label {
+    position: absolute; /* Position the label on the border line */
+    top: -20px; /* Move the label halfway above the container */
+    left: 20px; /* Adjust horizontal position */
+    font-size: 0.9rem; /* Smaller font size for the label */
+    font-weight: bold; /* Bold text */
+    background-color: #582105; /* Dark background color */
+    color: white; /* White text color */
+    padding: 5px 10px; /* Add padding */
+    border-radius: 5px 5px 0 0; /* Rounded corners on the top */
+  }
+  
+  /* Step Styling */
+  .step {
+    border-left: 4px solid #582105; /* Add a left border to each step */
+    margin-left: 20px; /* Add left margin to the steps */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .step:hover {
+    transform: translateX(10px); /* Move the step slightly to the right on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+  }

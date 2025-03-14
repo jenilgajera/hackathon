@@ -1,0 +1,67 @@
+/* Track Apply QR Section */
+.track-apply-qr {
+    padding: 60px 0; /* Add padding for spacing */
+    background-color: #f8f9fa; /* Light background color */
+  }
+  
+  /* Card Styling */
+  .card {
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .card:hover {
+    transform: translateY(-10px); /* Lift card on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+  }
+  
+  .card-body {
+    text-align: center; /* Center-align content */
+    padding: 30px; /* Add padding inside the card */
+  }
+  
+  .card-title {
+    font-size: 1.5rem; /* Larger font size for title */
+    font-weight: bold; /* Bold title */
+    color: #582105; /* Theme color */
+    margin-bottom: 15px; /* Add spacing below title */
+  }
+  
+  .card-text {
+    font-size: 1rem; /* Font size for text */
+    color: #333; /* Dark gray text color */
+    margin-bottom: 20px; /* Add spacing below text */
+  }
+  
+  .btn-primary {
+    background-color: #582105; /* Theme color for button */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Add padding to button */
+    font-size: 1rem; /* Font size for button text */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .btn-primary:hover {
+    background-color: #df6463; /* Change button color on hover */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 767.98px) {
+    .track-apply-qr {
+      padding: 40px 0; /* Reduce padding for smaller screens */
+    }
+  
+    .card-title {
+      font-size: 1.3rem; /* Reduce font size for smaller screens */
+    }
+  
+    .card-text {
+      font-size: 0.9rem; /* Reduce font size for smaller screens */
+    }
+  
+    .btn-primary {
+      font-size: 0.9rem; /* Reduce font size for smaller screens */
+    }
+  }
