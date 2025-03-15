@@ -30,11 +30,11 @@ const FileNOCForm = () => {
       </p>
 
       {!selectedStage ? (
-        <div className="row g-4">
+        <div className="row g-4 border rounded">
           {stages.map((stage) => (
             <div key={stage.id} className="col-md-4">
               <div
-                className="card h-100 shadow-sm border-0 text-center p-4 hover-scale"
+                className="card h-100 shadow-sm border-2 text-center p-4 hover-scale"
                 style={{
                   borderRadius: "15px",
                   transition: "transform 0.2s",
