@@ -10,14 +10,13 @@ const L_navbar = () => {
         {/* Left Side: Logo and Title */}
         <a className="navbar-brand" href="#">
           <img
-            src={logo} // Replace with your logo URL
+            src={logo}
             alt="Logo"
             width="30"
             height="30"
             className="d-inline-block align-text-top logo"
           />
-          <span className="ms-2 title">Hackthon</span>{" "}
-          {/* Replace with your project title */}
+          <span className="ms-2 title">Hackathon</span>
         </a>
 
         {/* Right Side: Navigation Links */}
@@ -53,12 +52,12 @@ const L_navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={"/Login"}>
+              <Link className="btn btn-custom me-2" to={"/Login"}>
                 Login
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={"/Register"}>
+              <Link className="btn btn-custom" to={"/Register"}>
                 Register
               </Link>
             </li>

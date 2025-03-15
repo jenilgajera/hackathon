@@ -1,11 +1,10 @@
 import React, { useState } from "react";
+import "../Assets/css/Userstyle.css";
 import { ApplicationDetails } from "./ApplicationDetails ";
 import { SiteDetails } from "./SiteDetails";
 import { BuildingProjectDetails } from "./BuildingProjectDetails";
 import { FireSafetyMeasures } from "./FireSafetyMeasures";
 import { Attachments } from "./Attachments";
-import "../Assets/css/Userstyle.css";
-
 
 const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
   const [currentStep, setCurrentStep] = useState(selectedStage || 1);
@@ -22,7 +21,7 @@ const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
     if (currentStep < steps.length) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-      setSelectedStage(nextStep); // Update the selected stage
+      setSelectedStage(nextStep);
     }
   };
 
@@ -30,7 +29,7 @@ const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
     if (currentStep > 1) {
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
-      setSelectedStage(prevStep); // Update the selected stage
+      setSelectedStage(prevStep);
     }
   };
 
@@ -52,43 +51,62 @@ const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
   };
 
   return (
-    <div className="progress-bar-form">
-      {/* Step-Based Progress Bar */}
-      <div className="progress-bar-container mb-4">
-        <div className="d-flex justify-content-between align-items-center">
-          {steps.map((step, index) => (
-            <div
-              key={step.id}
-              className={`progress-step ${
-                currentStep > step.id ? "completed" : ""
-              } ${currentStep === step.id ? "active" : ""}`}
-            >
-              <div className="step-number">{index + 1}</div>{" "}
-              {/* Use index + 1 for step number */}
-              <div className="step-title">{step.title}</div>
+    <div className="container-fluid p-4">
+      {/* Progress Bar Section */}
+      <div className="card shadow-sm border-0 rounded-lg p-3 mb-4">
+        <div className="progress-bar-container">
+          <div className="d-flex justify-content-between align-items-center position-relative">
+            {steps.map((step, index) => (
+              <div
+                key={step.id}
+                className={`progress-step ${
+                  currentStep > step.id ? "completed" : ""
+                } ${currentStep === step.id ? "active" : ""}`}
+              >
+                <div className="step-number">{index + 1}</div>
+                <div className="step-title">{step.title}</div>
+              </div>
+            ))}
+            <div className="progress-line">
+              <div
+                className="progress-line-fill"
+                style={{
+                  width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                }}
+              ></div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Form Content */}
-      <div className="form-content">{renderStep()}</div>
+      {/* Form Content Section */}
+      <div className="card shadow-sm border-0 rounded-lg">
+        <div
+          className="card-header bg-gradient text-white  py-3"
+          style={{ background: "#582105" }}
+        >
+          <h4 className="mb-0">{steps[currentStep - 1].title}</h4>
+        </div>
+        <div className="card-body p-4">
+          <div className="form-content p-3">{renderStep()}</div>
+        </div>
+      </div>
 
       {/* Navigation Buttons */}
-      <div className="navigation-buttons mt-4">
+      <div className="d-flex justify-content-between mt-4">
         <button
-          className="btn btn-secondary me-2"
+          className="btn btn-outline-secondary btn-lg rounded-pill px-4"
           onClick={handlePrevious}
           disabled={currentStep === 1}
         >
-          Previous
+          <i className="bi bi-arrow-left me-2"></i>Previous
         </button>
         <button
-          className="btn btn-primary"
+          className="btn btn-primary btn-lg rounded-pill px-4"
           onClick={handleNext}
           disabled={currentStep === steps.length}
         >
-          Next
+          Next<i className="bi bi-arrow-right ms-2"></i>
         </button>
       </div>
     </div>

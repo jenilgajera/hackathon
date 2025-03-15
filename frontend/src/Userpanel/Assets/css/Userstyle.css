@@ -1,7 +1,8 @@
 /* Progress Bar Styles */
 .progress-bar-container {
   width: 100%;
-  padding: 20px 0;
+  padding: 15px 0;
+  position: relative;
 }
 
 .progress-step {
@@ -9,6 +10,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  z-index: 1; /* Ensure steps are above the connecting line */
 }
 
 .progress-step .step-number {
@@ -22,6 +24,7 @@
   font-weight: bold;
   color: #6c757d;
   margin-bottom: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .progress-step.completed .step-number {
@@ -35,13 +38,75 @@
 }
 
 .progress-step .step-title {
-  font-size: 14px;
+  font-size: 12px;
   color: #6c757d;
   text-align: center;
+  transition: color 0.3s ease;
 }
 
 .progress-step.completed .step-title,
 .progress-step.active .step-title {
   color: #582105;
   font-weight: bold;
+}
+
+/* Connecting Line */
+.progress-line {
+  position: absolute;
+  top: 15px; /* Adjust based on step-number size */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e9ecef;
+  z-index: 0; /* Ensure the line is behind the steps */
+}
+
+.progress-line-fill {
+  height: 100%;
+  background-color: #582105;
+  transition: width 0.3s ease;
+}
+
+/* Card Styling */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #582105;
+  border-color: #582105;
+  font-weight: bold;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  background-color: #a44a1e;
+  border-color: #a44a1e;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  font-weight: bold;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Hover Scale Effect */
+.hover-scale:hover {
+  transform: scale(1.03);
+  transition: transform 0.2s ease-in-out;
 }

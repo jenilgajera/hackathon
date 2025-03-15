@@ -17,27 +17,40 @@ const FileNOCForm = () => {
   };
 
   return (
-    <div className="container p-5">
+    <div className="container p-4">
       <h1
-        className="text-center mb-5 display-4 fw-bold"
+        className="text-center mb-4 display-4 fw-bold"
         style={{ color: "#582105" }}
       >
         Fire Safety Certificate Application
       </h1>
+      <p className="text-center text-muted mb-5 fs-5">
+        Complete the necessary steps to apply for your Fire Safety Certificate
+        efficiently.
+      </p>
 
       {!selectedStage ? (
-        <div className="row">
+        <div className="row g-4">
           {stages.map((stage) => (
-            <div key={stage.id} className="col-md-4 mb-4">
+            <div key={stage.id} className="col-md-4">
               <div
-                className="card h-100 shadow-sm border-0 text-center p-4"
-                style={{ cursor: "pointer", borderRadius: "15px" }}
+                className="card h-100 shadow-sm border-0 text-center p-4 hover-scale"
+                style={{
+                  borderRadius: "15px",
+                  transition: "transform 0.2s",
+                  cursor: "pointer",
+                }}
                 onClick={() => handleStageClick(stage.id)}
               >
-                <h2 className="card-title fw-bold" style={{ color: "#582105" }}>
-                  {stage.title}
-                </h2>
-                <p className="card-text text-muted">Click to start</p>
+                <div className="card-body">
+                  <h2
+                    className="card-title fw-bold mb-3"
+                    style={{ color: "#582105" }}
+                  >
+                    {stage.title}
+                  </h2>
+                  <p className="card-text text-muted">Click to start</p>
+                </div>
               </div>
             </div>
           ))}
