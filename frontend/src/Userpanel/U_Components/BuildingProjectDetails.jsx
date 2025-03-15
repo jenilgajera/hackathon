@@ -1,7 +1,6 @@
 export const BuildingProjectDetails = () => {
   return (
     <div>
-      <h3>Building Project Details</h3>
       <form>
         <div className="mb-3">
           <label htmlFor="projectName" className="form-label">

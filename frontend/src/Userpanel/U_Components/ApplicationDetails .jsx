@@ -1,7 +1,6 @@
 export const ApplicationDetails = () => {
   return (
     <div>
-      <h3>Application Details</h3>
       <form>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">

@@ -1,7 +1,6 @@
 export const SiteDetails = () => {
   return (
     <div>
-      <h3>Site Details</h3>
       <form>
         <div className="mb-3">
           <label htmlFor="district" className="form-label">

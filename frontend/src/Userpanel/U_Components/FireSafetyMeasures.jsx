@@ -1,7 +1,6 @@
 export const FireSafetyMeasures = () => {
   return (
     <div>
-      <h3>Fire Safety Measures</h3>
       <form>
         <div className="mb-3">
           <label htmlFor="fireStaff" className="form-label">
