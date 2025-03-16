@@ -37,11 +37,7 @@ const L_navbar = () => {
         >
           <ul className="navbar-nav">
             <li className="nav-item">
-<<<<<<< Updated upstream
               <Link className="nav-link active" aria-current="page" to={"/"}>
-=======
-              <Link className="nav-link active" ria-current="page" to={"/Home"}>
->>>>>>> Stashed changes
                 Home
               </Link>
             </li>
@@ -56,20 +52,12 @@ const L_navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
-<<<<<<< Updated upstream
               <Link className="btn btn-custom me-2" to={"/Login"}>
-=======
-              <Link className="nav-link" to={"/Login"}>
->>>>>>> Stashed changes
                 Login
               </Link>
             </li>
             <li className="nav-item">
-<<<<<<< Updated upstream
               <Link className="btn btn-custom" to={"/Register"}>
-=======
-              <Link className="nav-link" to={"/Register"}>
->>>>>>> Stashed changes
                 Register
               </Link>
             </li>

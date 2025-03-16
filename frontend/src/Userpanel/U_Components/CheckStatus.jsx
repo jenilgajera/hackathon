@@ -98,7 +98,6 @@ const CheckStatus = () => {
       <p className="text-center text-muted mb-5 fs-5">
         Verify and ensure all details are correctly filled before proceeding.
       </p>
-
       {/* Status Cards Section */}
       <div className="row g-4">
         {formStatusData.map((form) => (
@@ -165,7 +164,6 @@ const CheckStatus = () => {
           </div>
         ))}
       </div>
-
       {/* Back to Dashboard Button */}
       <div className="text-center mt-5">
         <button
@@ -212,14 +210,25 @@ const CheckStatus = () => {
                 <div className="row g-3">
                   {/* Personal Details Card */}
                   <div className="col-md-6">
-                    <div className="card h-100 shadow-sm border-0">
-                      <div className="card-body">
-                        <h5
-                          className="card-title fw-bold"
-                          style={{ color: "#582105" }}
-                        >
+                    <div className="section-container position-relative mb-4">
+                      {/* Personal Details Header */}
+                      <div
+                        className="section-header position-absolute bg-white px-3 py-1 rounded"
+                        style={{ top: "-15px", left: "20px", zIndex: 1 }}
+                      >
+                        <h5 className="mb-0" style={{ color: "#582105" }}>
                           Personal Details
                         </h5>
+                      </div>
+
+                      {/* Personal Details Content */}
+                      <div
+                        className="section-content bg-light p-4 border-2 rounded-3"
+                        style={{
+                          border: "2px solid #582105",
+                          paddingTop: "30px",
+                        }}
+                      >
                         <p>
                           <strong>Name:</strong> {selectedForm.name}
                         </p>
@@ -247,14 +256,25 @@ const CheckStatus = () => {
 
                   {/* Location Details Card */}
                   <div className="col-md-6">
-                    <div className="card h-100 shadow-sm border-0">
-                      <div className="card-body">
-                        <h5
-                          className="card-title fw-bold"
-                          style={{ color: "#582105" }}
-                        >
+                    <div className="section-container position-relative mb-4">
+                      {/* Location Details Header */}
+                      <div
+                        className="section-header position-absolute bg-white px-3 py-1 rounded"
+                        style={{ top: "-15px", left: "20px", zIndex: 1 }}
+                      >
+                        <h5 className="mb-0" style={{ color: "#582105" }}>
                           Location Details
                         </h5>
+                      </div>
+
+                      {/* Location Details Content */}
+                      <div
+                        className="section-content bg-light p-4 border-2 rounded-3"
+                        style={{
+                          border: "2px solid #582105",
+                          paddingTop: "30px",
+                        }}
+                      >
                         <p>
                           <strong>District:</strong> {selectedForm.district}
                         </p>
@@ -281,14 +301,25 @@ const CheckStatus = () => {
 
                   {/* Architect Details Card */}
                   <div className="col-md-12">
-                    <div className="card h-100 shadow-sm border-0">
-                      <div className="card-body">
-                        <h5
-                          className="card-title fw-bold"
-                          style={{ color: "#582105" }}
-                        >
+                    <div className="section-container position-relative mb-4">
+                      {/* Architect Details Header */}
+                      <div
+                        className="section-header position-absolute bg-white px-3 py-1 rounded"
+                        style={{ top: "-15px", left: "20px", zIndex: 1 }}
+                      >
+                        <h5 className="mb-0" style={{ color: "#582105" }}>
                           Architect/ Engineer Details
                         </h5>
+                      </div>
+
+                      {/* Architect Details Content */}
+                      <div
+                        className="section-content bg-light p-4 border-2 rounded-3"
+                        style={{
+                          border: "2px solid #582105",
+                          paddingTop: "30px",
+                        }}
+                      >
                         <p>
                           <strong>Name:</strong> {selectedForm.architectName}
                         </p>
