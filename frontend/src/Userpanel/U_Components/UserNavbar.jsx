@@ -1,5 +1,7 @@
 import React from "react";
-import logo from "../Assets/image/logo.png"; // Import the logo image
+import { NavLink } from "react-router-dom"; // Import NavLink
+import logo from "../Assets/image/logo.png";
+import "../Assets/css/Userstyle.css";
 
 const UserNavbar = () => {
   return (
@@ -11,7 +13,7 @@ const UserNavbar = () => {
     >
       <div className="container-fluid">
         {/* Logo and Title */}
-        <a className="navbar-brand d-flex align-items-center" href="#">
+        <NavLink className="navbar-brand d-flex align-items-center" to="/">
           <img
             src={logo} // Use the imported logo
             alt="Logo"
@@ -21,11 +23,15 @@ const UserNavbar = () => {
               width: "40px",
               transition: "transform 0.3s ease",
             }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "scale(1.1)")
+            }
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
           />
           <span className="title text-white fs-4 fw-bold">
             Fire Safety Certificate
           </span>
-        </a>
+        </NavLink>
 
         {/* Navbar Toggler for Mobile */}
         <button
@@ -45,30 +51,38 @@ const UserNavbar = () => {
           <ul className="navbar-nav ms-auto">
             {/* Home Link */}
             <li className="nav-item">
-              <a
-                href="#"
-                className="nav-link text-white fw-medium mx-2 d-flex align-items-center"
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `nav-link text-white fw-medium mx-2 d-flex align-items-center hover-effect ${
+                    isActive ? "active" : ""
+                  }`
+                }
               >
                 <i className="bi bi-house-door me-2 icon"></i>
                 Home
-              </a>
+              </NavLink>
             </li>
 
             {/* Contact Us Link */}
             <li className="nav-item">
-              <a
-                href="#"
-                className="nav-link text-white fw-medium mx-2 d-flex align-items-center"
+              <NavLink
+                to="/contact-us" // Update this to your contact route
+                className={({ isActive }) =>
+                  `nav-link text-white fw-medium mx-2 d-flex align-items-center hover-effect ${
+                    isActive ? "active" : ""
+                  }`
+                }
               >
                 <i className="bi bi-telephone me-2 icon"></i>
                 Contact Us
-              </a>
+              </NavLink>
             </li>
 
             {/* Profile Dropdown */}
             <li className="nav-item dropdown">
               <a
-                className="nav-link dropdown-toggle text-white fw-medium mx-2 d-flex align-items-center"
+                className="nav-link dropdown-toggle text-white fw-medium mx-2 d-flex align-items-center hover-effect"
                 href="#"
                 id="navbarDropdown"
                 role="button"
@@ -83,12 +97,12 @@ const UserNavbar = () => {
                 aria-labelledby="navbarDropdown"
               >
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item hover-effect" href="#">
                     <i className="bi bi-person-circle me-2"></i>Profile
                   </a>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item hover-effect" href="#">
                     <i className="bi bi-key me-2"></i>Change Password
                   </a>
                 </li>
@@ -96,7 +110,7 @@ const UserNavbar = () => {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item hover-effect" href="#">
                     <i className="bi bi-box-arrow-right me-2"></i>Logout
                   </a>
                 </li>

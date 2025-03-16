@@ -4,6 +4,7 @@ import UserNavbar from "./UserNavbar";
 import UserFooter from "./UserFooter";
 import UserHome from "./UserHome";
 import FileNOCForm from "./FileNOCForm";
+import CheckStatus from "./CheckStatus";
 
 const UserApp = () => {
   return (
@@ -14,11 +15,8 @@ const UserApp = () => {
       {/* Routes */}
       <Routes>
         <Route path="/" element={<UserHome />} />
-        <Route path="/file-noc" element={<FileNOCForm />} />{" "}
-        {/* Add this route */}
-        {/* <Route path="/user/file-noc" element={<FileNOCForm />} />
-        <Route path="/user/check-status" element={<CheckStatus />} />
-        <Route path="/user/renew-application" element={<RenewApplication />} /> */}
+        <Route path="/file-noc" element={<FileNOCForm />} />
+        <Route path="/check-status" element={<CheckStatus />} />
       </Routes>
 
       {/* Footer */}

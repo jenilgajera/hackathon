@@ -110,35 +110,3 @@
   transform: scale(1.03);
   transition: transform 0.2s ease-in-out;
 }
-
-/* ApplicationDetails  */
-.section-container {
-  position: relative;
-  margin-top: 20px;
-}
-
-.section-header {
-  top: -15px;
-  left: 20px;
-  z-index: 1;
-  background-color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.section-content {
-  border: 1px solid #582105;
-  border-radius: 10px;
-  padding-top: 30px; /* Ensure content doesn't overlap with the header */
-}
-
-.step {
-  border-left: 4px solid #582105;
-  padding-left: 10px;
-}
-
-.step span {
-  color: #582105;
-  font-weight: bold;
-}
