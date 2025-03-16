@@ -1,0 +1,32 @@
+/* Footer Section */
+.footer {
+  background-color: #582105; /* Dark background color */
+  color: white; /* White text color */
+}
+
+/* Links Styling */
+.footer a {
+  color: white; /* White text color for links */
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.footer a:hover {
+  color: #feb68b; /* Change link color on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 767.98px) {
+  .footer .d-flex {
+    flex-direction: column; /* Stack content vertically on smaller screens */
+    text-align: center; /* Center-align content */
+  }
+
+  .footer .d-flex.align-items-center {
+    margin-bottom: 10px; /* Add spacing between sections */
+  }
+
+  .footer .d-flex a {
+    margin: 5px 0; /* Add spacing between links */
+  }
+}

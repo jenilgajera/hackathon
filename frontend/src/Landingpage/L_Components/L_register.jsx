@@ -6,9 +6,15 @@ const L_register = () => {
     <div className="register-page">
       <div className="container">
         <div className="row justify-content-center">
+<<<<<<< Updated upstream
           <div className="col-md-12 col-lg-10">
             <div className="register-form p-4 rounded">
               <h2 className="text-center text-white mb-4">Registration Form</h2>
+=======
+          <div className="col-md-10">
+            <div className="register-form p-4 rounded">
+              <h2 className="text-center mb-4">Registration Form</h2>
+>>>>>>> Stashed changes
               <form>
                 {/* First Row: Name, Mobile, Email */}
                 <div className="row mb-3">

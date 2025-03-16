@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const L_navbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-custom">
+    <nav className="navbar navbar-expand-lg navbar-custom sticky-top">
       <div className="container-fluid">
         {/* Left Side: Logo and Title */}
         <a className="navbar-brand" href="#">
@@ -37,7 +37,11 @@ const L_navbar = () => {
         >
           <ul className="navbar-nav">
             <li className="nav-item">
+<<<<<<< Updated upstream
               <Link className="nav-link active" aria-current="page" to={"/"}>
+=======
+              <Link className="nav-link active" ria-current="page" to={"/Home"}>
+>>>>>>> Stashed changes
                 Home
               </Link>
             </li>
@@ -52,12 +56,20 @@ const L_navbar = () => {
               </Link>
             </li>
             <li className="nav-item">
+<<<<<<< Updated upstream
               <Link className="btn btn-custom me-2" to={"/Login"}>
+=======
+              <Link className="nav-link" to={"/Login"}>
+>>>>>>> Stashed changes
                 Login
               </Link>
             </li>
             <li className="nav-item">
+<<<<<<< Updated upstream
               <Link className="btn btn-custom" to={"/Register"}>
+=======
+              <Link className="nav-link" to={"/Register"}>
+>>>>>>> Stashed changes
                 Register
               </Link>
             </li>
