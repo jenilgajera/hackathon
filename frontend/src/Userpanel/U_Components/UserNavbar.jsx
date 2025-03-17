@@ -6,7 +6,7 @@ import "../Assets/css/Userstyle.css";
 const UserNavbar = () => {
   return (
     <nav
-      className="navbar navbar-expand-lg p-3"
+      className="navbar navbar-expand-lg p-3 sticky-top"
       style={{
         background: "linear-gradient(to right, #582105, #a44a1e)",
       }}
@@ -67,7 +67,7 @@ const UserNavbar = () => {
             {/* Contact Us Link */}
             <li className="nav-item">
               <NavLink
-                to="/contact-us" // Update this to your contact route
+                to="/contactus"
                 className={({ isActive }) =>
                   `nav-link text-white fw-medium mx-2 d-flex align-items-center hover-effect ${
                     isActive ? "active" : ""

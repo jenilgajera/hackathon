@@ -5,6 +5,7 @@ import UserFooter from "./UserFooter";
 import UserHome from "./UserHome";
 import FileNOCForm from "./FileNOCForm";
 import CheckStatus from "./CheckStatus";
+import ContactUs from "./ContactUs";
 
 const UserApp = () => {
   return (
@@ -17,6 +18,7 @@ const UserApp = () => {
         <Route path="/" element={<UserHome />} />
         <Route path="/file-noc" element={<FileNOCForm />} />
         <Route path="/check-status" element={<CheckStatus />} />
+        <Route path="/contactus" element={<ContactUs />} />
       </Routes>
 
       {/* Footer */}

@@ -110,3 +110,44 @@
   transform: scale(1.03);
   transition: transform 0.2s ease-in-out;
 }
+
+/* Custom Styles for Contact Us Page */
+.contact-us-container {
+  background-color: #f8f9fa; /* Light background for contrast */
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.contact-details-card {
+  background-color: #fff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.contact-form {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button {
+  background-color: #582105;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #3a1603; /* Darker shade on hover */
+}
+
+/* Icon Styling */
+.contact-details-card .fa {
+  font-size: 1.2rem;
+  vertical-align: middle;
+}
