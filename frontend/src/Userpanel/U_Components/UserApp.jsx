@@ -6,6 +6,7 @@ import UserHome from "./UserHome";
 import FileNOCForm from "./FileNOCForm";
 import CheckStatus from "./CheckStatus";
 import ContactUs from "./ContactUs";
+import RenewNOCForm from "./RenewNOCForm";
 
 const UserApp = () => {
   return (
@@ -18,6 +19,7 @@ const UserApp = () => {
         <Route path="/" element={<UserHome />} />
         <Route path="/file-noc" element={<FileNOCForm />} />
         <Route path="/check-status" element={<CheckStatus />} />
+        <Route path="/renew-application" element={<RenewNOCForm />} />
         <Route path="/contactus" element={<ContactUs />} />
       </Routes>
 
