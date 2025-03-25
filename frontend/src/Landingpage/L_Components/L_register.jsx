@@ -1,207 +1,149 @@
 import React from "react";
-import "../Assets/css/L_register.css"; // Import custom CSS for styling
+import { Link } from "react-router-dom";
+import { 
+  EnvelopeFill,
+  PersonFill,
+  TelephoneFill,
+  LockFill,
+  PersonPlus // Changed from UserPlus to PersonPlus which is available in react-bootstrap-icons
+} from "react-bootstrap-icons";
 
 const L_register = () => {
   return (
-    <div className="register-page">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-12 col-lg-10">
-            <div className="register-form p-4 rounded">
-              <h2 className="text-center text-white mb-4">Registration Form</h2>
-              <form>
-                {/* First Row: Name, Mobile, Email */}
-                <div className="row mb-3">
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="name" className="form-label">
-                        Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        placeholder="Enter your name"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="mobile" className="form-label">
-                        Mobile Number <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        className="form-control"
-                        id="mobile"
-                        placeholder="Enter your mobile number"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="email" className="form-label">
-                        Email ID <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        placeholder="Enter your email"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
+    <div className="container py-3" style={{ maxWidth: '450px' }}>
+      <div className="container d-flex flex-column align-items-center text-center py-4">
+        {/* User Icon - Using PersonPlus instead of UserPlus */}
+        <PersonPlus className="text-danger mb-3" size={50} />
 
-                {/* Second Row: Password, Confirm Password, Gender */}
-                <div className="row mb-3">
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="password" className="form-label">
-                        Password <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        placeholder="Enter your password"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="confirmPassword" className="form-label">
-                        Confirm Password <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="confirmPassword"
-                        placeholder="Confirm your password"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label className="form-label">
-                        Gender <span className="text-danger">*</span>
-                      </label>
-                      <div>
-                        <div className="form-check form-check-inline">
-                          <input
-                            type="radio"
-                            className="form-check-input"
-                            id="male"
-                            name="gender"
-                            value="male"
-                            required
-                          />
-                          <label htmlFor="male" className="form-check-label">
-                            Male
-                          </label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                          <input
-                            type="radio"
-                            className="form-check-input"
-                            id="female"
-                            name="gender"
-                            value="female"
-                            required
-                          />
-                          <label htmlFor="female" className="form-check-label">
-                            Female
-                          </label>
-                        </div>
-                        <div className="form-check form-check-inline">
-                          <input
-                            type="radio"
-                            className="form-check-input"
-                            id="other"
-                            name="gender"
-                            value="other"
-                            required
-                          />
-                          <label htmlFor="other" className="form-check-label">
-                            Other
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        {/* Title */}
+        <h2 className="fw-bold">Create your account</h2>
 
-                {/* Third Row: Identity Proof, Upload Document, Captcha */}
-                <div className="row mb-3">
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="identityProof" className="form-label">
-                        Identity Proof <span className="text-danger">*</span>
-                      </label>
-                      <select
-                        className="form-select"
-                        id="identityProof"
-                        required
-                      >
-                        <option value="">Please Select</option>
-                        <option value="aadhar">Aadhar Card</option>
-                        <option value="pan">PAN Card</option>
-                        <option value="passport">Passport</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="document" className="form-label">
-                        Upload Document <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="file"
-                        className="form-control"
-                        id="document"
-                        accept=".pdf"
-                        required
-                      />
-                      <small className="text-muted">
-                        Note: Allowed Extension: PDF & Max size: 25 MB
-                      </small>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <div className="form-group">
-                      <label htmlFor="captcha" className="form-label">
-                        Enter Captcha <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="captcha"
-                        placeholder="Enter captcha"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
+        {/* Sign-in Link */}
+        <p className="text-muted">
+          Already have an account?{" "}
+          <Link to="/login" className="text-danger fw-semibold">
+            Sign in
+          </Link>
+        </p>
+      </div>
 
-                {/* Buttons */}
-                <div className="d-flex gap-2">
-                  <button type="submit" className="btn btn-primary">
-                    Register
-                  </button>
-                  <button type="button" className="btn btn-danger">
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
+
+      {/* Form */}
+      <form>
+        {/* First Name */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">First Name</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <PersonFill size={16} />
+            </span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter first name"
+              required
+            />
           </div>
         </div>
-      </div>
+
+        {/* Last Name */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">Last Name</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <PersonFill size={16} />
+            </span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter last name"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Email */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">Email</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <EnvelopeFill size={16} />
+            </span>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Phone */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">Phone Number</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <TelephoneFill size={16} />
+            </span>
+            <input
+              type="tel"
+              className="form-control"
+              placeholder="Enter phone number"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Password */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">Password</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <LockFill size={16} />
+            </span>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Create password"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Confirm Password */}
+        <div className="mb-3">
+          <label className="form-label small fw-semibold">Confirm Password</label>
+          <div className="input-group">
+            <span className="input-group-text">
+              <LockFill size={16} />
+            </span>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Confirm password"
+              required
+            />
+          </div>
+        </div>
+
+        {/* Terms Checkbox */}
+        <div className="form-check mb-3">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="termsCheck"
+            required
+          />
+          <label className="form-check-label small" htmlFor="termsCheck">
+            I agree to the Terms and Conditions
+          </label>
+        </div>
+
+        {/* Submit Button */}
+        <button className="btn btn-danger w-100 py-2"> {/* Changed to btn-danger to match the red theme */}
+          Create Account
+        </button>
+      </form>
     </div>
   );
 };
