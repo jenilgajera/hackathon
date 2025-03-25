@@ -17,7 +17,7 @@ const L_login = () => {
         backgroundAttachment: "fixed"
       }}
     >
-      <div className="card p-3 p-md-4 mx-2" style={{
+      <div className="card p-4 mx-2" style={{
         width: "100%",
         maxWidth: "450px",
         backgroundColor: "rgba(255, 255, 255, 0.85)",
@@ -25,10 +25,15 @@ const L_login = () => {
         border: "none",
         boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)"
       }}>
-        <div className="text-center mb-3 mb-md-4">
-          <h2 className="h4 h3-md mb-1 fw-semibold">Sign in to your account</h2>
-          <p className="text-muted mb-2">
-            Or <Link to="/register" className="text-primary text-decoration-none fw-medium">create a new account</Link>
+        {/* Header with Lock Icon */}
+        <div className="container d-flex flex-column align-items-center text-center mb-4">
+          <Lock className="text-danger mb-3" size={50} />
+          <h1 className="fw-bold h3">Sign in to your account</h1>
+          <p className="text-muted">
+            Or{" "}
+            <Link to="/register" className="text-danger fw-semibold">
+              Create new Account
+            </Link>
           </p>
         </div>
 
@@ -58,7 +63,7 @@ const L_login = () => {
           </div>
 
           {/* Remember Me & Forgot Password */}
-          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-3 mb-md-4">
+          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center mb-4">
             <div className="form-check mb-2 mb-sm-0">
               <input
                 type="checkbox"
@@ -69,7 +74,7 @@ const L_login = () => {
                 Remember me
               </label>
             </div>
-            <Link to="/forgot-password" className="text-primary text-decoration-none">
+            <Link to="/forgot-password" className="text-danger text-decoration-none">
               Forgot your password?
             </Link>
           </div>
