@@ -1,23 +1,20 @@
-import React from "react";
-import "../Assets/css/Userstyle.css"; // Import custom CSS for styling
-
-export const ApplicationDetails = () => {
+export const RenewSiteDetails = () => {
   return (
     <div>
       <form>
-        {/* Personal Information Section */}
+        {/* 1. Building/Project/Scheme Information Section */}
         <div className="section-container position-relative mb-4">
-          {/* Personal Information Header */}
+          {/* Section Header */}
           <div
             className="section-header position-absolute bg-white px-3 py-1 rounded"
             style={{ top: "-15px", left: "20px", zIndex: 1 }}
           >
             <h5 className="mb-0" style={{ color: "#582105" }}>
-              Personal Information
+              Building/Project/Scheme Information
             </h5>
           </div>
 
-          {/* Personal Information Content */}
+          {/* Section Content */}
           <div
             className="section-content bg-light p-4 border-2 rounded-3"
             style={{ border: "2px solid #582105", paddingTop: "30px" }}
@@ -38,92 +35,42 @@ export const ApplicationDetails = () => {
                 </div>
               </div>
 
-              {/* Mobile Number */}
+              {/* Select Area of the Project */}
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="mobile" className="form-label">
-                    Mobile Number*
+                  <label htmlFor="areaOfProject" className="form-label">
+                    Select Area of the Project*
                   </label>
-                  <input
-                    type="tel"
-                    className="form-control"
-                    id="mobile"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Email ID */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email ID*
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Location Information Section */}
-        <div className="section-container position-relative mb-4">
-          {/* Location Information Header */}
-          <div
-            className="section-header position-absolute bg-white px-3 py-1 rounded"
-            style={{ top: "-15px", left: "20px", zIndex: 1 }}
-          >
-            <h5 className="mb-0" style={{ color: "#582105" }}>
-              Location Information
-            </h5>
-          </div>
-
-          {/* Location Information Content */}
-          <div
-            className="section-content bg-light p-4 border-2 rounded-3"
-            style={{ border: "2px solid #582105", paddingTop: "30px" }}
-          >
-            <div className="row g-3">
-              {/* District */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="district" className="form-label">
-                    District*
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="district"
-                    required
-                  />
+                  <select className="form-select" id="areaOfProject" required>
+                    <option value="">Select Area</option>
+                    <option value="residential">Residential</option>
+                    <option value="commercial">Commercial</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="public">Public</option>
+                  </select>
                 </div>
               </div>
 
               {/* Plot/House No., Building/Company/Apartment Name/No. */}
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="plot" className="form-label">
-                    Plot/ House No., Building/ Company/ Apartment Name/ No.*
+                  <label htmlFor="plotNo" className="form-label">
+                    Plot/House No., Building/Company/Apartment Name/No.*
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="plot"
+                    id="plotNo"
                     required
                   />
                 </div>
               </div>
 
-              {/* Area/Colony/Street/Sector/Ward/Village */}
+              {/* Area/Colony/Street/Sector/Society */}
               <div className="col-md-6">
                 <div className="mb-3">
                   <label htmlFor="area" className="form-label">
-                    Area/ Colony/ Street/ Sector/ Ward/ Village*
+                    Area/Colony/Street/Sector/Society*
                   </label>
                   <input
                     type="text"
@@ -149,46 +96,16 @@ export const ApplicationDetails = () => {
                 </div>
               </div>
 
-              {/* Village */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="Village" className="form-label">
-                    Village*
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="Village"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Taluka */}
+              {/* Taluka/City/Village */}
               <div className="col-md-6">
                 <div className="mb-3">
                   <label htmlFor="taluka" className="form-label">
-                    Taluka*
+                    Taluka/City/Village*
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     id="taluka"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* District */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="District" className="form-label">
-                    District*
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="District"
                     required
                   />
                 </div>
@@ -212,50 +129,119 @@ export const ApplicationDetails = () => {
           </div>
         </div>
 
-        {/* Architect/Engineer Details Section */}
+        {/* 2. Geographical Coordinates Section */}
         <div className="section-container position-relative mb-4">
-          {/* Architect/Engineer Details Header */}
+          {/* Section Header */}
           <div
             className="section-header position-absolute bg-white px-3 py-1 rounded"
             style={{ top: "-15px", left: "20px", zIndex: 1 }}
           >
             <h5 className="mb-0" style={{ color: "#582105" }}>
-              Architect/Engineer Details
+              Geographical Coordinates
             </h5>
           </div>
 
-          {/* Architect/Engineer Details Content */}
+          {/* Section Content */}
           <div
             className="section-content bg-light p-4 border-2 rounded-3"
             style={{ border: "2px solid #582105", paddingTop: "30px" }}
           >
             <div className="row g-3">
-              {/* Name (Architect on Record - AoR / Engineer on Record - EoR) */}
+              {/* Latitude */}
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="architectName" className="form-label">
-                    Name (Architect on Record - AoR / Engineer on Record - EoR)*
+                  <label htmlFor="latitude" className="form-label">
+                    Latitude* (e.g., 23.226877)
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="architectName"
+                    id="latitude"
                     required
                   />
                 </div>
               </div>
 
-              {/* Registration No. */}
+              {/* Longitude */}
               <div className="col-md-6">
                 <div className="mb-3">
-                  <label htmlFor="registrationNo" className="form-label">
-                    Registration No.*
+                  <label htmlFor="longitude" className="form-label">
+                    Longitude* (e.g., 72.65973)
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="registrationNo"
+                    id="longitude"
                     required
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Additional Site Information Section */}
+        <div className="section-container position-relative mb-4">
+          {/* Section Header */}
+          <div
+            className="section-header position-absolute bg-white px-3 py-1 rounded"
+            style={{ top: "-15px", left: "20px", zIndex: 1 }}
+          >
+            <h5 className="mb-0" style={{ color: "#582105" }}>
+              Additional Site Information
+            </h5>
+          </div>
+
+          {/* Section Content */}
+          <div
+            className="section-content bg-light p-4 border-2 rounded-3"
+            style={{ border: "2px solid #582105", paddingTop: "30px" }}
+          >
+            <div className="row g-3">
+              {/* TP Number */}
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="tpNumber" className="form-label">
+                    TP Number
+                  </label>
+                  <input type="text" className="form-control" id="tpNumber" />
+                </div>
+              </div>
+
+              {/* FP Number */}
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="fpNumber" className="form-label">
+                    FP Number
+                  </label>
+                  <input type="text" className="form-control" id="fpNumber" />
+                </div>
+              </div>
+
+              {/* Survey Number */}
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="surveyNumber" className="form-label">
+                    Survey Number
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="surveyNumber"
+                  />
+                </div>
+              </div>
+
+              {/* Sub Plot Number */}
+              <div className="col-md-6">
+                <div className="mb-3">
+                  <label htmlFor="subPlotNumber" className="form-label">
+                    Sub Plot Number
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="subPlotNumber"
                   />
                 </div>
               </div>
@@ -273,5 +259,3 @@ export const ApplicationDetails = () => {
     </div>
   );
 };
-
-export default ApplicationDetails;

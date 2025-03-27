@@ -1,7 +1,7 @@
 import React from "react";
 import "../Assets/css/Userstyle.css"; // Import custom CSS for styling
 
-export const ApplicationDetails = () => {
+export const RenewApplicationDetails = () => {
   return (
     <div>
       <form>
@@ -149,21 +149,6 @@ export const ApplicationDetails = () => {
                 </div>
               </div>
 
-              {/* Village */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="Village" className="form-label">
-                    Village*
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="Village"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Taluka */}
               <div className="col-md-6">
                 <div className="mb-3">
@@ -174,21 +159,6 @@ export const ApplicationDetails = () => {
                     type="text"
                     className="form-control"
                     id="taluka"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* District */}
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label htmlFor="District" className="form-label">
-                    District*
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="District"
                     required
                   />
                 </div>
@@ -274,4 +244,4 @@ export const ApplicationDetails = () => {
   );
 };
 
-export default ApplicationDetails;
+export default RenewApplicationDetails;

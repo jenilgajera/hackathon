@@ -1,4 +1,4 @@
-export const FireSafetyMeasures = () => {
+export const RenewFireSafetyMeasures = () => {
   return (
     <div>
       <form>
