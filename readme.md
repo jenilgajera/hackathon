@@ -22,11 +22,11 @@ The **Fire NOC Portal** is a cutting-edge web application designed to **simplify
 
 | Technology | Description |
 |------------|------------|
-| 🎨 **Frontend** | React.js, Tailwind CSS |
+| 🎨 **Frontend** | React.js, CSS |
 | ⚙️ **Backend** | Node.js, Express.js |
-| 🗄️ **Database** | Supabase (PostgreSQL) |
-| 🔐 **Authentication** | Firebase/Auth0 |
-| ☁️ **Hosting** | Vercel/Netlify |
+| 🗄️ **Database** | mongodb|
+| 🔐 **Authentication** | Jwt auth  |
+| ☁️ **Hosting** | render / vercel |
 
 ## 🏗️ Installation Guide
 ### 🔹 Prerequisites
