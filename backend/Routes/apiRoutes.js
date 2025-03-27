@@ -1,33 +1,36 @@
+// routes/apiRoutes.js
 const express = require("express");
 const router = express.Router();
 const authenticate = require("../middlewares/authMiddleware");
-const applicationController = require("../Controllers/applicationController");
+const {
+  savePersonalInfo,
+  saveLocation,
+  saveArchitect,
+  saveSite,
+  saveProject,
+  saveFireSafety,
+  saveAttachments,
+  submitApplication,
+  getDraftStatus,
+  getApplications,
+  getApplicationDetails,
+} = require("../Controllers/applicationController");
 
-// @route   POST /api/applications
-// @desc    Create a new application
-// @access  Private
-router.post(
-  "/applications",
-  authenticate,
-  applicationController.createApplication
-);
+// Draft endpoints
+router.post("/applications/personal", authenticate, savePersonalInfo);
+router.post("/applications/location", authenticate, saveLocation);
+router.post("/applications/architect", authenticate, saveArchitect);
+router.post("/applications/site", authenticate, saveSite);
+router.post("/applications/project", authenticate, saveProject);
+router.post("/applications/fire-safety", authenticate, saveFireSafety);
+router.post("/applications/attachments", authenticate, saveAttachments);
 
-// @route   GET /api/applications
-// @desc    Get all applications for user
-// @access  Private
-router.get(
-  "/applications",
-  authenticate,
-  applicationController.getApplications
-);
+// Application status endpoints
+router.get("/applications/draft", authenticate, getDraftStatus);
+router.put("/applications/:id/submit", authenticate, submitApplication);
 
-// @route   GET /api/applications/:id
-// @desc    Get application details
-// @access  Private
-router.get(
-  "/applications/:id",
-  authenticate,
-  applicationController.getApplicationDetails
-);
+// Existing endpoints
+router.get("/applications", authenticate, getApplications);
+router.get("/applications/:id", authenticate, getApplicationDetails);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+// Models/Application.js
 const mongoose = require("mongoose");
 
 const ApplicationSchema = new mongoose.Schema({
@@ -6,27 +7,23 @@ const ApplicationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  mobile_number: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
+  name: String,
+  mobile_number: String,
+  email: String,
   status: {
     type: String,
-    enum: ["Pending", "Approved", "Rejected"],
-    default: "Pending",
+    enum: ["draft", "submitted","underreview", "approved", "rejected"],
+    default: "draft",
+  },
+  currentStep: {
+    type: Number,
+    default: 1,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  submittedAt: Date,
 });
 
 module.exports = mongoose.model("Application", ApplicationSchema);
