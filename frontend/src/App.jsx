@@ -8,8 +8,8 @@ function App() {
   return (
     <>
 
-      {/* <Landing_app/> */}
-      <UserApp />
+      <Landing_app/>
+      {/* <UserApp /> */}
       {/* <Admin_app/> */}
     </>
   );
