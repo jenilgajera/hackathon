@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../Assets/css/Userstyle.css";
-import { ApplicationDetails } from "./ApplicationDetails ";
+import ApplicationDetails from "./ApplicationDetails ";
 import { SiteDetails } from "./SiteDetails";
 import { BuildingProjectDetails } from "./BuildingProjectDetails";
 import { FireSafetyMeasures } from "./FireSafetyMeasures";
@@ -33,6 +33,12 @@ const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
     }
   };
 
+  // New function to handle step click
+  const handleStepClick = (stepId) => {
+    setCurrentStep(stepId);
+    setSelectedStage(stepId);
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -62,6 +68,8 @@ const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
                 className={`progress-step ${
                   currentStep > step.id ? "completed" : ""
                 } ${currentStep === step.id ? "active" : ""}`}
+                onClick={() => handleStepClick(step.id)}
+                style={{ cursor: "pointer" }} // Add pointer cursor to indicate clickable
               >
                 <div className="step-number">{index + 1}</div>
                 <div className="step-title">{step.title}</div>
