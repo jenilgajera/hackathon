@@ -254,23 +254,34 @@ export const RenewAttachments = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="d-flex justify-content-between">
-          <div>
-            <button type="button" className="btn btn-primary me-2">
+        <div className="d-flex justify-content-between align-items-center mt-4">
+          <div className="d-flex gap-3">
+            <button
+              type="button"
+              className="btn btn-primary px-4 py-2 rounded-pill"
+              style={{ minWidth: "180px" }}
+            >
+              <i className="bi bi-phone me-2"></i>
               Verify Mobile Number
             </button>
-            <button type="submit" className="btn btn-success">
+            <button
+              type="submit"
+              className="btn btn-success px-4 py-2 rounded-pill"
+              style={{ minWidth: "180px" }}
+            >
+              <i className="bi bi-check-circle me-2"></i>
               Confirm & Final Submit
             </button>
           </div>
           <button
             type="button"
-            className="btn"
+            className="btn px-4 py-2 rounded-pill text-white"
             style={{
               background: "linear-gradient(to right, #582105, #a44a1e)",
-              color: "white",
+              minWidth: "180px",
             }}
           >
+            <i className="bi bi-printer me-2"></i>
             Print Application
           </button>
         </div>

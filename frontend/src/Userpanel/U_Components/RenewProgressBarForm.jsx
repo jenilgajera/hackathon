@@ -6,7 +6,7 @@ import { RenewBuildingProjectDetails } from "./RenewBuildingProjectDetails";
 import { RenewFireSafetyMeasures } from "./RenewFireSafetyMeasures";
 import { RenewAttachments } from "./RenewAttachments";
 
-const RenewProgressBarForm = ({ selectedStage, setSelectedStage }) => {
+const ProgressBarForm = ({ selectedStage, setSelectedStage }) => {
   const [currentStep, setCurrentStep] = useState(selectedStage || 1);
 
   const steps = [
@@ -31,6 +31,12 @@ const RenewProgressBarForm = ({ selectedStage, setSelectedStage }) => {
       setCurrentStep(prevStep);
       setSelectedStage(prevStep);
     }
+  };
+
+  // New function to handle step click
+  const handleStepClick = (stepId) => {
+    setCurrentStep(stepId);
+    setSelectedStage(stepId);
   };
 
   const renderStep = () => {
@@ -62,6 +68,8 @@ const RenewProgressBarForm = ({ selectedStage, setSelectedStage }) => {
                 className={`progress-step ${
                   currentStep > step.id ? "completed" : ""
                 } ${currentStep === step.id ? "active" : ""}`}
+                onClick={() => handleStepClick(step.id)}
+                style={{ cursor: "pointer" }} // Add pointer cursor to indicate clickable
               >
                 <div className="step-number">{index + 1}</div>
                 <div className="step-title">{step.title}</div>
@@ -113,4 +121,4 @@ const RenewProgressBarForm = ({ selectedStage, setSelectedStage }) => {
   );
 };
 
-export default RenewProgressBarForm;
+export default ProgressBarForm;
