@@ -35,4 +35,4 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => console.log(`Server running on port ${5000}`));
