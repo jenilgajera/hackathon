@@ -9,8 +9,8 @@ function App() {
     <>
 
       {/* <Landing_app/> */}
-      <UserApp />
-      {/* <Admin_app/> */}
+      {/* <UserApp /> */}
+      <Admin_app/>
     </>
   );
 }
