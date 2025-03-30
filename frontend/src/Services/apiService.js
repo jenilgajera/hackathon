@@ -12,8 +12,8 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+  } 
+return config;
 });
 
 // Application API functions
@@ -40,8 +40,11 @@ export const applicationApi = {
   saveFireSafety: (data) => api.post("/applications/fire-safety", data),
 
   // Save attachments
-  saveAttachments: (data) => api.post("/applications/attachments", data),
-
+  saveAttachments: (formData) => api.post("/applications/attachments", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
   // Submit application
   submitApplication: (id) => api.put(`/applications/${id}/submit`),
 
