@@ -7,6 +7,9 @@ const Project = require("../Models/Project");
 const FireSafety = require("../Models/FireSafety");
 const Attachment = require("../Models/Attachment");
 
+const { uploadAttachments } = require('../Config/multerConfig');
+
+
 // Helper function to get or create draft application
 const getOrCreateDraft = async (userId) => {
   let application = await Application.findOne({
@@ -233,32 +236,85 @@ const saveFireSafety = async (req, res) => {
   }
 };
 
-// Save attachments
 const saveAttachments = async (req, res) => {
   try {
+    console.log('Files received:', req.files); // Debug log
+    
     const application = await Application.findOne({
       user: req.user.id,
       status: "draft",
     });
 
     if (!application) {
+      // Clean up uploaded files if application not found
+      if (req.files) {
+        Object.values(req.files).forEach(files => {
+          files.forEach(file => {
+            try {
+              if (fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path);
+              }
+            } catch (err) {
+              console.error(`Error deleting file ${file.path}:`, err);
+            }
+          });
+        });
+      }
       return res.status(404).json({ message: "No draft application found" });
     }
 
-    // First delete existing attachments for this application
-    await Attachment.deleteMany({ application: application._id });
+    // Initialize attachments array
+    const attachments = [];
 
-    // Then save new attachments
-    const attachments = await Promise.all(
-      req.body.map(async (attachment) => {
-        const newAttachment = new Attachment({
-          application: application._id,
-          ...attachment,
-        });
-        await newAttachment.save();
-        return newAttachment;
-      })
-    );
+    // Check if files were uploaded
+    if (req.files && Object.keys(req.files).length > 0) {
+      // First delete existing attachments for this application
+      const existingAttachments = await Attachment.find({ application: application._id });
+      await Promise.all(existingAttachments.map(async (attachment) => {
+        try {
+          if (fs.existsSync(attachment.file_path)) {
+            fs.unlinkSync(attachment.file_path);
+          }
+        } catch (err) {
+          console.error(`Error deleting file ${attachment.file_path}:`, err);
+        }
+      }));
+      await Attachment.deleteMany({ application: application._id });
+
+      // Process uploaded files
+      for (const [fieldName, files] of Object.entries(req.files)) {
+        // Ensure files is an array (Multer might return single file or array)
+        const filesArray = Array.isArray(files) ? files : [files];
+        
+        for (const file of filesArray) {
+          try {
+            const newAttachment = new Attachment({
+              application: application._id,
+              document_type: fieldName,
+              file_path: file.path,
+              original_name: file.originalname,
+              mime_type: file.mimetype,
+              size: file.size
+            });
+            await newAttachment.save();
+            attachments.push(newAttachment);
+          } catch (err) {
+            console.error(`Error saving attachment ${fieldName}:`, err);
+            // Clean up the file if DB save failed
+            try {
+              if (fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path);
+              }
+            } catch (unlinkErr) {
+              console.error(`Error cleaning up file ${file.path}:`, unlinkErr);
+            }
+            throw err; // Re-throw to be caught by the outer try-catch
+          }
+        }
+      }
+    } else {
+      return res.status(400).json({ message: "No files were uploaded" });
+    }
 
     application.currentStep = 8; // All steps completed
     await application.save();
@@ -269,9 +325,31 @@ const saveAttachments = async (req, res) => {
       nextStep: application.currentStep,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error in saveAttachments:", error);
+    
+    // Clean up uploaded files on error
+    if (req.files) {
+      Object.values(req.files).forEach(files => {
+        const filesArray = Array.isArray(files) ? files : [files];
+        filesArray.forEach(file => {
+          try {
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path);
+            }
+          } catch (err) {
+            console.error(`Error cleaning up file ${file.path}:`, err);
+          }
+        });
+      });
+    }
+    
+    res.status(500).json({ 
+      message: error.message || "Failed to save attachments",
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
+
 
 // Submit complete application
 const submitApplication = async (req, res) => {
@@ -428,6 +506,7 @@ module.exports = {
   saveProject,
   saveFireSafety,
   saveAttachments,
+  uploadAttachments,
   submitApplication,
   getDraftStatus,
   getApplications,

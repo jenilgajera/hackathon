@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
   },
   document_url: {
     type: String,
-    required: true,
+    required: false,
   },
   createdAt: {
     type: Date,

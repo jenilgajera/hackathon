@@ -1,3 +1,4 @@
+// models/Attachment.js
 const mongoose = require("mongoose");
 
 const AttachmentSchema = new mongoose.Schema({
@@ -9,9 +10,32 @@ const AttachmentSchema = new mongoose.Schema({
   document_type: {
     type: String,
     required: true,
+    enum: [
+      'owner_photo',
+      'aadhar_card',
+      'pan_card',
+      'self_assurance_video',
+      'property_document',
+      'insurance_policy',
+      'building_plan_approval',
+      'architectural_plan',
+      'electricity_bill'
+    ]
   },
-  file_url: {
+  file_path: {
     type: String,
+    required: true,
+  },
+  original_name: {
+    type: String,
+    required: true,
+  },
+  mime_type: {
+    type: String,
+    required: true,
+  },
+  size: {
+    type: Number,
     required: true,
   },
   createdAt: {
