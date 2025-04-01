@@ -1,7 +1,7 @@
 // routes/apiRoutes.js
 const express = require("express");
 const router = express.Router();
-const multer =require("multer");
+const multer = require("multer");
 const authenticate = require("../middlewares/authMiddleware");
 const {
   savePersonalInfo,
@@ -15,9 +15,9 @@ const {
   getDraftStatus,
   getApplications,
   getApplicationDetails,
+  getAllApplicationsWithDetails,
 } = require("../Controllers/applicationController");
 const { uploadAttachments } = require("../Config/multerConfig");
-
 
 // Draft endpoints
 router.post("/applications/personal", authenticate, savePersonalInfo);
@@ -29,21 +29,21 @@ router.post("/applications/fire-safety", authenticate, saveFireSafety);
 // router.post("/applications/attachments", authenticate, saveAttachments);
 
 router.post(
-  "/applications/attachments", 
-  authenticate, 
+  "/applications/attachments",
+  authenticate,
   (req, res, next) => {
     // Add error handling for Multer
-    uploadAttachments(req, res, function(err) {
+    uploadAttachments(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: err.message || "File upload error",
-          code: err.code 
+          code: err.code,
         });
       } else if (err) {
         // An unknown error occurred
-        return res.status(500).json({ 
-          message: err.message || "File upload failed" 
+        return res.status(500).json({
+          message: err.message || "File upload failed",
         });
       }
       // Everything went fine, proceed to controller
@@ -59,6 +59,6 @@ router.put("/applications/:id/submit", authenticate, submitApplication);
 // Existing endpoints
 router.get("/applications", authenticate, getApplications);
 router.get("/applications/:id", authenticate, getApplicationDetails);
-
+router.get("/getAllApplicationsWithDetails", getAllApplicationsWithDetails);
 
 module.exports = router;

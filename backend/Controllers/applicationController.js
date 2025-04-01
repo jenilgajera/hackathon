@@ -7,8 +7,7 @@ const Project = require("../Models/Project");
 const FireSafety = require("../Models/FireSafety");
 const Attachment = require("../Models/Attachment");
 
-const { uploadAttachments } = require('../Config/multerConfig');
-
+const { uploadAttachments } = require("../Config/multerConfig");
 
 // Helper function to get or create draft application
 const getOrCreateDraft = async (userId) => {
@@ -238,8 +237,8 @@ const saveFireSafety = async (req, res) => {
 
 const saveAttachments = async (req, res) => {
   try {
-    console.log('Files received:', req.files); // Debug log
-    
+    console.log("Files received:", req.files); // Debug log
+
     const application = await Application.findOne({
       user: req.user.id,
       status: "draft",
@@ -248,8 +247,8 @@ const saveAttachments = async (req, res) => {
     if (!application) {
       // Clean up uploaded files if application not found
       if (req.files) {
-        Object.values(req.files).forEach(files => {
-          files.forEach(file => {
+        Object.values(req.files).forEach((files) => {
+          files.forEach((file) => {
             try {
               if (fs.existsSync(file.path)) {
                 fs.unlinkSync(file.path);
@@ -269,23 +268,27 @@ const saveAttachments = async (req, res) => {
     // Check if files were uploaded
     if (req.files && Object.keys(req.files).length > 0) {
       // First delete existing attachments for this application
-      const existingAttachments = await Attachment.find({ application: application._id });
-      await Promise.all(existingAttachments.map(async (attachment) => {
-        try {
-          if (fs.existsSync(attachment.file_path)) {
-            fs.unlinkSync(attachment.file_path);
+      const existingAttachments = await Attachment.find({
+        application: application._id,
+      });
+      await Promise.all(
+        existingAttachments.map(async (attachment) => {
+          try {
+            if (fs.existsSync(attachment.file_path)) {
+              fs.unlinkSync(attachment.file_path);
+            }
+          } catch (err) {
+            console.error(`Error deleting file ${attachment.file_path}:`, err);
           }
-        } catch (err) {
-          console.error(`Error deleting file ${attachment.file_path}:`, err);
-        }
-      }));
+        })
+      );
       await Attachment.deleteMany({ application: application._id });
 
       // Process uploaded files
       for (const [fieldName, files] of Object.entries(req.files)) {
         // Ensure files is an array (Multer might return single file or array)
         const filesArray = Array.isArray(files) ? files : [files];
-        
+
         for (const file of filesArray) {
           try {
             const newAttachment = new Attachment({
@@ -294,7 +297,7 @@ const saveAttachments = async (req, res) => {
               file_path: file.path,
               original_name: file.originalname,
               mime_type: file.mimetype,
-              size: file.size
+              size: file.size,
             });
             await newAttachment.save();
             attachments.push(newAttachment);
@@ -326,12 +329,12 @@ const saveAttachments = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in saveAttachments:", error);
-    
+
     // Clean up uploaded files on error
     if (req.files) {
-      Object.values(req.files).forEach(files => {
+      Object.values(req.files).forEach((files) => {
         const filesArray = Array.isArray(files) ? files : [files];
-        filesArray.forEach(file => {
+        filesArray.forEach((file) => {
           try {
             if (fs.existsSync(file.path)) {
               fs.unlinkSync(file.path);
@@ -342,14 +345,13 @@ const saveAttachments = async (req, res) => {
         });
       });
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       message: error.message || "Failed to save attachments",
-      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      error: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
-
 
 // Submit complete application
 const submitApplication = async (req, res) => {
@@ -498,6 +500,42 @@ const getApplicationDetails = async (req, res) => {
   }
 };
 
+ // Get ALL applications with complete data (for admin)
+  const getAllApplicationsWithDetails = async (req, res) => {
+    try {
+      const applications = await Application.find().sort({ createdAt: -1 });
+
+      // Get all related data for each application
+      const applicationsWithDetails = await Promise.all(
+        applications.map(async (app) => {
+          const [location, architect, site, project, fireSafety, attachments] =
+            await Promise.all([
+              Location.findOne({ application: app._id }),
+              Architect.findOne({ application: app._id }),
+              Site.findOne({ application: app._id }),
+              Project.findOne({ application: app._id }),
+              FireSafety.findOne({ application: app._id }),
+              Attachment.find({ application: app._id }),
+            ]);
+
+          return {
+            application: app,
+            location,
+            architect,
+            site,
+            project,
+            fireSafety,
+            attachments,
+          };
+        })
+      );
+
+      res.json(applicationsWithDetails);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 module.exports = {
   savePersonalInfo,
   saveLocation,
@@ -511,4 +549,5 @@ module.exports = {
   getDraftStatus,
   getApplications,
   getApplicationDetails,
+  getAllApplicationsWithDetails,
 };

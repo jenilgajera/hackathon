@@ -1,119 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { applicationApi } from "../../Services/apiService";
-import "../Assets/css/Userstyle.css";
+import React from "react";
+import "../Assets/css/Userstyle.css"; // Import custom CSS for styling
 
 export const ApplicationDetails = () => {
-  const [formData, setFormData] = useState({
-    // Personal Information
-    name: "",
-    mobile_number: "",
-    email: "",
-
-    // Location Information
-    district: "",
-    plot_details: "",
-    area: "",
-    landmark: "",
-    village: "",
-    taluka: "",
-    pin_code: "",
-
-    // Architect/Engineer Details
-    architect_name: "",
-    registration_no: "",
-  });
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Load draft data on component mount
-  useEffect(() => {
-    const loadDraftData = async () => {
-      try {
-        const response = await applicationApi.getDraftStatus();
-        if (response.data) {
-          // Merge data from different sections
-          setFormData({
-            ...formData,
-            ...response.data.application,
-            ...response.data.location,
-            ...response.data.architect,
-          });
-        }
-      } catch (error) {
-        console.error("Error loading draft data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadDraftData();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Save personal information
-      const personalResponse = await applicationApi.savePersonalInfo({
-        name: formData.name,
-        mobile_number: formData.mobile_number,
-        email: formData.email,
-      });
-
-      // Save location information
-      const locationResponse = await applicationApi.saveLocation({
-        district: formData.district,
-        plot_details: formData.plot_details,
-        area: formData.area,
-        landmark: formData.landmark,
-        village: formData.village,
-        taluka: formData.taluka,
-        pin_code: formData.pin_code,
-      });
-
-      // Save architect information
-      const architectResponse = await applicationApi.saveArchitect({
-        name: formData.name,
-        registration_no: formData.registration_no,
-      });
-
-      // Get the updated application status
-      const draftStatus = await applicationApi.getDraftStatus();
-
-      console.log(
-        "Draft saved with status:",
-        draftStatus.data.application.status
-      );
-      alert("Draft saved successfully!");
-    } catch (error) {
-      console.error(
-        "Error saving draft:",
-        error.response?.data || error.message
-      );
-      alert(
-        `Failed to save draft: ${
-          error.response?.data?.message || error.message
-        }`
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (isLoading) {
-    return <div>Loading application data...</div>;
-  }
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -349,10 +237,7 @@ export const ApplicationDetails = () => {
                   <input
                     type="text"
                     className="form-control"
-                    id="architect_name"
-                    name="architect_name"
-                    value={formData.name}
-                    onChange={handleChange}
+                    id="architectName"
                     required
                   />
                 </div>

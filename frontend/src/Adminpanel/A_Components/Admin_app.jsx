@@ -1,9 +1,37 @@
-import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import Home from "./Home";
+import "../Assets/css/Admin_app.css";
 
-const Admin_app = () => {
+const Adminapp = () => {
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarExpanded((prevState) => !prevState);
+  };
+
   return (
-    <div>Admin_app</div>
-  )
-}
+    <Router>
+      <div className={`wrapper ${isSidebarExpanded ? "sidebar-expanded" : ""}`}>
+        <Sidebar
+          isSidebarExpanded={isSidebarExpanded}
+          toggleSidebar={toggleSidebar}
+        />
+        <div className="main">
+          <Navbar />
+          <main className="content px-3 py-4">
+            <Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </div>
+    </Router>
+  );
+};
 
-export default Admin_app
+export default Adminapp;
