@@ -7,8 +7,8 @@ import Landing_app from "./Landingpage/L_Components/Landing_app";
 function App() {
   return (
     <>
-      {/* <Landing_app/> */}
-      <UserApp />
+      <Landing_app/>
+      {/* <UserApp /> */}
       {/* <Admin_app/> */}
     </>
   );
