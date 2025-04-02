@@ -450,13 +450,40 @@ const getDraftStatus = async (req, res) => {
   }
 };
 
-// Get all applications (both drafts and submitted)
+// Get all applications (both drafts and submitted) for the particular user that login
 const getApplications = async (req, res) => {
   try {
+    // First get all applications for this user
     const applications = await Application.find({ user: req.user.id }).sort({
       createdAt: -1,
     });
-    res.json(applications);
+
+    // For each application, get all related data
+    const applicationsWithDetails = await Promise.all(
+      applications.map(async (app) => {
+        const [location, architect, site, project, fireSafety, attachments] =
+          await Promise.all([
+            Location.findOne({ application: app._id }),
+            Architect.findOne({ application: app._id }),
+            Site.findOne({ application: app._id }),
+            Project.findOne({ application: app._id }),
+            FireSafety.findOne({ application: app._id }),
+            Attachment.find({ application: app._id }),
+          ]);
+
+        return {
+          application: app,
+          location,
+          architect,
+          site,
+          project,
+          fireSafety,
+          attachments,
+        };
+      })
+    );
+
+    res.json(applicationsWithDetails);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -500,41 +527,41 @@ const getApplicationDetails = async (req, res) => {
   }
 };
 
- // Get ALL applications with complete data (for admin)
-  const getAllApplicationsWithDetails = async (req, res) => {
-    try {
-      const applications = await Application.find().sort({ createdAt: -1 });
+// Get ALL applications with complete data (for admin)
+const getAllApplicationsWithDetails = async (req, res) => {
+  try {
+    const applications = await Application.find().sort({ createdAt: -1 });
 
-      // Get all related data for each application
-      const applicationsWithDetails = await Promise.all(
-        applications.map(async (app) => {
-          const [location, architect, site, project, fireSafety, attachments] =
-            await Promise.all([
-              Location.findOne({ application: app._id }),
-              Architect.findOne({ application: app._id }),
-              Site.findOne({ application: app._id }),
-              Project.findOne({ application: app._id }),
-              FireSafety.findOne({ application: app._id }),
-              Attachment.find({ application: app._id }),
-            ]);
+    // Get all related data for each application
+    const applicationsWithDetails = await Promise.all(
+      applications.map(async (app) => {
+        const [location, architect, site, project, fireSafety, attachments] =
+          await Promise.all([
+            Location.findOne({ application: app._id }),
+            Architect.findOne({ application: app._id }),
+            Site.findOne({ application: app._id }),
+            Project.findOne({ application: app._id }),
+            FireSafety.findOne({ application: app._id }),
+            Attachment.find({ application: app._id }),
+          ]);
 
-          return {
-            application: app,
-            location,
-            architect,
-            site,
-            project,
-            fireSafety,
-            attachments,
-          };
-        })
-      );
+        return {
+          application: app,
+          location,
+          architect,
+          site,
+          project,
+          fireSafety,
+          attachments,
+        };
+      })
+    );
 
-      res.json(applicationsWithDetails);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+    res.json(applicationsWithDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   savePersonalInfo,
