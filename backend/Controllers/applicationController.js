@@ -534,9 +534,68 @@ const getApplicationDetails = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
+  };// Make sure to import mongoose at the top of your controller file
+  
+  const updateApplicationStatus = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      
+      const validStatuses = ["draft", "submitted", "underreview", "approved", "rejected"];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid status. Allowed values: ${validStatuses.join(", ")}`
+        });
+      }
+      
+      // 2. Find Application
+      const application = await Application.findById(id);
+      if (!application) {
+        return res.status(404).json({
+          success: false,
+          message: "Application not found"
+        });
+      }
+      
+      // 3. Update Status
+      const previousStatus = application.status;
+      application.status = status;
+      
+      // 4. Update Timestamps Automatically
+      if (status === "submitted" && previousStatus === "draft") {
+        application.submittedAt = new Date();
+      }
+      else if ((status === "approved" || status === "rejected") &&
+                previousStatus === "underreview") {
+        application.processedAt = new Date();
+      }
+      
+      await application.save();
+      
+      // 5. Send Response
+      res.json({
+        success: true,
+        data: {
+          _id: application._id,
+          previousStatus,
+          newStatus: application.status,
+          submittedAt: application.submittedAt,
+          processedAt: application.processedAt
+        },
+        message: `Status changed from ${previousStatus} to ${status}`
+      });
+    } catch (error) {
+      console.error("Status update error:", error);
+      res.status(500).json({
+        success: false,
+        message: error.message || "Internal server error"
+      });
+    }
   };
-
 module.exports = {
+  updateApplicationStatus,
   savePersonalInfo,
   saveLocation,
   saveArchitect,

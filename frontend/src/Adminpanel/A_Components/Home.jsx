@@ -6,31 +6,93 @@ const Home = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [selectedApp, setSelectedApp] = useState(null);
+  const [updateStatus, setUpdateStatus] = useState({ loading: false, error: null, success: null });
 
   useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/getAllApplicationsWithDetails",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch applications");
-        const data = await response.json();
-        setApplications(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchApplications();
   }, []);
+
+  const fetchApplications = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/getAllApplicationsWithDetails",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch applications");
+      const data = await response.json();
+      setApplications(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateApplicationStatus = async (id, status) => {
+    setUpdateStatus({ loading: true, error: null, success: null });
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/applications/${id}/status`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update status");
+      }
+
+      const result = await response.json();
+      
+      // Update local state
+      setApplications(apps => 
+        apps.map(app => 
+          app.application._id === id 
+            ? { ...app, application: { ...app.application, status } } 
+            : app
+        )
+      );
+      
+      // Update selected app if modal is open
+      if (selectedApp && selectedApp.application._id === id) {
+        setSelectedApp({
+          ...selectedApp,
+          application: { ...selectedApp.application, status }
+        });
+      }
+
+      setUpdateStatus({
+        loading: false,
+        error: null,
+        success: `Status successfully changed to ${status}`
+      });
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setUpdateStatus(prev => ({ ...prev, success: null }));
+      }, 3000);
+
+    } catch (error) {
+      console.error("Error updating application status:", error);
+      setUpdateStatus({
+        loading: false,
+        error: error.message || "Failed to update status",
+        success: null
+      });
+    }
+  };
 
   const filteredApplications = applications.filter(
     (app) =>
@@ -49,6 +111,8 @@ const Home = () => {
 
   const openModal = (application) => {
     setSelectedApp(application);
+    // Reset update status when opening modal
+    setUpdateStatus({ loading: false, error: null, success: null });
     // Show the modal using vanilla JS since we're not using react-bootstrap
     const modal = new window.bootstrap.Modal(
       document.getElementById("applicationModal")
@@ -196,6 +260,57 @@ const Home = () => {
               <div className="modal-body">
                 {selectedApp && (
                   <div>
+                    {/* Status Update Messages */}
+                    {updateStatus.error && (
+                      <div className="alert alert-danger mb-3" role="alert">
+                        {updateStatus.error}
+                      </div>
+                    )}
+                    {updateStatus.success && (
+                      <div className="alert alert-success mb-3" role="alert">
+                        {updateStatus.success}
+                      </div>
+                    )}
+                    
+                    {/* Status Update Buttons */}
+                    <div className="mb-4">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <h5 className="mb-0">Application Management</h5>
+                        <div className="d-flex gap-2">
+                          <button 
+                            className="btn btn-success"
+                            onClick={() => updateApplicationStatus(selectedApp.application._id, "approved")}
+                            disabled={updateStatus.loading || selectedApp.application.status === "approved"}
+                          >
+                            {updateStatus.loading && selectedApp.application.status !== "approved" ? (
+                              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            ) : null}
+                            Approve Application
+                          </button>
+                          <button 
+                            className="btn btn-danger"
+                            onClick={() => updateApplicationStatus(selectedApp.application._id, "rejected")}
+                            disabled={updateStatus.loading || selectedApp.application.status === "rejected"}
+                          >
+                            {updateStatus.loading && selectedApp.application.status !== "rejected" ? (
+                              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            ) : null}
+                            Reject Application
+                          </button>
+                          <button 
+                            className="btn btn-warning"
+                            onClick={() => updateApplicationStatus(selectedApp.application._id, "underreview")}
+                            disabled={updateStatus.loading || selectedApp.application.status === "underreview"}
+                          >
+                            {updateStatus.loading && selectedApp.application.status !== "underreview" ? (
+                              <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                            ) : null}
+                            Mark Under Review
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Basic Information */}
                     <div className="mb-4">
                       <h5>Basic Information</h5>
@@ -238,6 +353,14 @@ const Home = () => {
                                 <strong>Submitted:</strong>{" "}
                                 {new Date(
                                   selectedApp.application.submittedAt
+                                ).toLocaleString()}
+                              </p>
+                            )}
+                            {selectedApp.application.processedAt && (
+                              <p>
+                                <strong>Processed:</strong>{" "}
+                                {new Date(
+                                  selectedApp.application.processedAt
                                 ).toLocaleString()}
                               </p>
                             )}

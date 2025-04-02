@@ -16,6 +16,7 @@ const {
   getApplications,
   getApplicationDetails,
   getAllApplicationsWithDetails,
+  updateApplicationStatus
 } = require("../Controllers/applicationController");
 const { uploadAttachments } = require("../Config/multerConfig");
 
@@ -26,7 +27,9 @@ router.post("/applications/architect", authenticate, saveArchitect);
 router.post("/applications/site", authenticate, saveSite);
 router.post("/applications/project", authenticate, saveProject);
 router.post("/applications/fire-safety", authenticate, saveFireSafety);
-// router.post("/applications/attachments", authenticate, saveAttachments);
+
+// Fixed the status update route (it was missing a "/" in original code)
+router.post("/applications/:id/status", authenticate, updateApplicationStatus);
 
 router.post(
   "/applications/attachments",
@@ -52,6 +55,7 @@ router.post(
   },
   saveAttachments
 );
+
 // Application status endpoints
 router.get("/applications/draft", authenticate, getDraftStatus);
 router.put("/applications/:id/submit", authenticate, submitApplication);
