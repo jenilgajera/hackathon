@@ -4,6 +4,12 @@ import logo from "../Assets/image/logo.png";
 import "../Assets/css/Userstyle.css";
 
 const UserNavbar = () => {
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <nav
       className="navbar navbar-expand-lg p-3 sticky-top"
@@ -110,7 +116,14 @@ const UserNavbar = () => {
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <a className="dropdown-item hover-effect" href="#">
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleremoveToken();
+                    }}
+                    className="dropdown-item hover-effect"
+                    href="#"
+                  >
                     <i className="bi bi-box-arrow-right me-2"></i>Logout
                   </a>
                 </li>

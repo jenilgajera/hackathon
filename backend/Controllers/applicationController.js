@@ -6,8 +6,285 @@ const Site = require("../Models/Site");
 const Project = require("../Models/Project");
 const FireSafety = require("../Models/FireSafety");
 const Attachment = require("../Models/Attachment");
-
+const Certificate = require("../Models/Certificate");
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
+const QRCode = require("qrcode");
 const { uploadAttachments } = require("../Config/multerConfig");
+
+
+const generateCertificatePDF = (application, certificate, location, architect, site, project, fireSafety) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const doc = new PDFDocument({
+        size: 'A4',
+        margins: { top: 50, bottom: 50, left: 50, right: 50 },
+        info: {
+          Title: 'Fire Safety Certificate',
+          Author: 'Fire Safety Department',
+          Subject: 'Certificate of Compliance',
+          Keywords: 'fire, safety, certificate, compliance',
+          CreationDate: new Date()
+        }
+      });
+
+      const buffers = [];
+      doc.on('data', buffers.push.bind(buffers));
+      doc.on('end', () => {
+        const pdfData = Buffer.concat(buffers);
+        resolve(pdfData);
+      });
+
+      // Generate QR code
+      const verificationUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/api/certificates/verify/${certificate.certificateNumber}`;
+      const qrCodeDataURL = await QRCode.toDataURL(verificationUrl);
+
+      // Add border
+      doc.rect(30, 30, doc.page.width - 60, doc.page.height - 60).stroke();
+
+      // Header with QR code
+      doc.image(qrCodeDataURL, {
+        fit: [80, 80],
+        align: 'right',
+        x: doc.page.width - 100,
+        y: 40
+      });
+
+      // Certificate Title
+      doc.fontSize(24)
+         .fillColor('#582105')
+         .text('FIRE SAFETY CERTIFICATE', { 
+           align: 'center', 
+           underline: true 
+         });
+
+      // Certificate Number
+      doc.moveDown(0.5);
+      doc.fontSize(14)
+         .fillColor('#333')
+         .text(`Certificate No: ${certificate.certificateNumber}`, { 
+           align: 'center' 
+         });
+
+      // Horizontal line
+      doc.moveDown(1);
+      doc.moveTo(50, doc.y)
+         .lineTo(doc.page.width - 50, doc.y)
+         .stroke();
+      doc.moveDown(1);
+
+      // Applicant Details Section
+      doc.fontSize(16)
+         .fillColor('#582105')
+         .text('APPLICANT DETAILS', { underline: true });
+      doc.moveDown(0.5);
+
+      addDetailRow(doc, 'Full Name:', application.name);
+      addDetailRow(doc, 'Email:', application.email);
+      addDetailRow(doc, 'Mobile:', application.mobile_number);
+      doc.moveDown(1);
+
+      // Property Details Section
+      doc.fontSize(16)
+         .fillColor('#582105')
+         .text('PROPERTY DETAILS', { underline: true });
+      doc.moveDown(0.5);
+
+      if (location) {
+        addDetailRow(doc, 'Address:', `${location.plot_details}, ${location.landmark}`);
+        addDetailRow(doc, 'Area:', location.area);
+        addDetailRow(doc, 'District:', location.district);
+        addDetailRow(doc, 'Taluka:', location.taluka);
+        addDetailRow(doc, 'Village:', location.village);
+        addDetailRow(doc, 'Pincode:', location.pin_code);
+      }
+      doc.moveDown(1);
+
+      // Architect Details
+      if (architect) {
+        doc.fontSize(16)
+           .fillColor('#582105')
+           .text('ARCHITECT DETAILS', { underline: true });
+        doc.moveDown(0.5);
+        
+        addDetailRow(doc, 'Name:', architect.name);
+        addDetailRow(doc, 'Registration No:', architect.registration_no);
+        doc.moveDown(1);
+      }
+
+      // Site Details
+      if (site) {
+        doc.fontSize(16)
+           .fillColor('#582105')
+           .text('SITE DETAILS', { underline: true });
+        doc.moveDown(0.5);
+        
+        addDetailRow(doc, 'Project Name:', site.project_name);
+        addDetailRow(doc, 'Area Type:', site.area_type);
+        addDetailRow(doc, 'Survey No:', site.survey_number);
+        addDetailRow(doc, 'FP No:', site.fp_number);
+        addDetailRow(doc, 'TP No:', site.tp_number);
+        addDetailRow(doc, 'Coordinates:', `${site.latitude}, ${site.longitude}`);
+        doc.moveDown(1);
+      }
+
+      // Building Details
+      if (project) {
+        doc.fontSize(16)
+           .fillColor('#582105')
+           .text('BUILDING DETAILS', { underline: true });
+        doc.moveDown(0.5);
+        
+        addDetailRow(doc, 'Occupancy Type:', project.occupancy_type);
+        addDetailRow(doc, 'Site Area:', `${project.site_area} sq.m`);
+        addDetailRow(doc, 'Road Width:', `${project.road_width} m`);
+        addDetailRow(doc, 'Building Blocks:', project.building_blocks);
+        addDetailRow(doc, 'Entrance Dimensions:', `${project.entrance_width}m x ${project.entrance_height}m`);
+        doc.moveDown(1);
+      }
+
+      // Fire Safety Features
+      if (fireSafety) {
+        doc.fontSize(16)
+           .fillColor('#582105')
+           .text('FIRE SAFETY FEATURES', { underline: true });
+        doc.moveDown(0.5);
+        
+        const features = [];
+        if (fireSafety.fire_extinguishers) features.push('Fire Extinguishers');
+        if (fireSafety.fire_alarm_system) features.push('Fire Alarm System');
+        if (fireSafety.smoke_detectors) features.push('Smoke Detectors');
+        if (fireSafety.evacuation_plan) features.push('Evacuation Plan');
+        
+        addDetailRow(doc, 'Installed Features:', features.join(', ') || 'None');
+        addDetailRow(doc, 'Extinguisher Last Service:', new Date(fireSafety.extinguisher_date).toLocaleDateString());
+        addDetailRow(doc, 'Fire Drills Conducted:', fireSafety.fire_drills ? 'Yes' : 'No');
+        addDetailRow(doc, 'Staff Training:', fireSafety.training_received ? 'Yes' : 'No');
+        doc.moveDown(1);
+      }
+
+      // Certificate Validity
+      doc.fontSize(16)
+         .fillColor('#582105')
+         .text('CERTIFICATE VALIDITY', { underline: true });
+      doc.moveDown(0.5);
+      
+      addDetailRow(doc, 'Issued Date:', certificate.issuedDate.toLocaleDateString());
+      addDetailRow(doc, 'Valid Until:', certificate.expiryDate.toLocaleDateString());
+      doc.moveDown(2);
+
+      // Certification Statement
+      doc.fontSize(12)
+         .text('This is to certify that the above-mentioned property has been inspected and found to comply with the Fire Safety Regulations and Standards. This certificate confirms that the property meets all required fire safety measures and protocols.', {
+           align: 'justify'
+         });
+      doc.moveDown();
+      doc.text('This certificate is valid for one year from the date of issue and must be renewed before expiration to maintain compliance.', {
+        align: 'justify'
+      });
+
+      // Signature Section
+      doc.moveDown(3);
+      doc.fontSize(12).text('_________________________', { align: 'right' });
+      doc.fontSize(12).text('Fire Safety Officer', { align: 'right' });
+      doc.fontSize(10).text('(Signature & Stamp)', { align: 'right' });
+
+      // Footer
+      const footerY = doc.page.height - 60;
+      doc.fontSize(9)
+         .text('This is an official document issued by the Fire Safety Department. Tampering with this certificate is a punishable offense.', 50, footerY, {
+           align: 'center',
+           width: doc.page.width - 100
+         });
+      doc.moveDown(0.5);
+      doc.fontSize(9)
+         .text(`Verify this certificate at: ${verificationUrl}`, {
+           align: 'center',
+           width: doc.page.width - 100
+         });
+
+      doc.end();
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+// Helper function to add detail rows
+function addDetailRow(doc, label, value, x = 50, valueX = 200) {
+  const y = doc.y;
+  doc.fontSize(12)
+     .font('Helvetica-Bold')
+     .text(label, x, y);
+  doc.font('Helvetica')
+     .text(value || 'N/A', valueX, y);
+  doc.moveDown(0.5);
+}
+
+const downloadCertificate = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Fetch application with user data
+    const application = await Application.findById(id).populate('user', 'name email');
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    if (application.status !== 'approved') {
+      return res.status(403).json({ message: 'Application not approved' });
+    }
+
+    // Fetch all related data
+    const [location, architect, site, project, fireSafety] = await Promise.all([
+      Location.findOne({ application: id }),
+      Architect.findOne({ application: id }),
+      Site.findOne({ application: id }),
+      Project.findOne({ application: id }),
+      FireSafety.findOne({ application: id })
+    ]);
+
+    // Check or create certificate
+    let certificate = await Certificate.findOne({ application: id });
+    if (!certificate) {
+      certificate = new Certificate({
+        application: id,
+        certificateNumber: `FSC-${Date.now().toString().slice(-6)}`,
+        issuedDate: new Date(),
+        expiryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        isValid: true
+      });
+      await certificate.save();
+    }
+
+    // Generate PDF
+    const pdfBuffer = await generateCertificatePDF(
+      application, 
+      certificate, 
+      location, 
+      architect, 
+      site, 
+      project, 
+      fireSafety
+    );
+
+    // Set response headers
+    res.contentType('application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=FireSafetyCertificate_${certificate.certificateNumber}.pdf`
+    );
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error('Download certificate error:', error);
+    res.status(500).json({ 
+      message: 'Failed to generate certificate',
+      error: error.message 
+    });
+  }
+};
 
 // Helper function to get or create draft application
 const getOrCreateDraft = async (userId) => {
@@ -556,73 +833,79 @@ const getAllApplicationsWithDetails = async (req, res) => {
         };
       })
     );
-      res.json(applicationsWithDetails);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };// Make sure to import mongoose at the top of your controller file
-  
-  const updateApplicationStatus = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { status } = req.body;
-      
-      
-      const validStatuses = ["draft", "submitted", "underreview", "approved", "rejected"];
-      if (!validStatuses.includes(status)) {
-        return res.status(400).json({
-          success: false,
-          message: `Invalid status. Allowed values: ${validStatuses.join(", ")}`
-        });
-      }
-      
-      // 2. Find Application
-      const application = await Application.findById(id);
-      if (!application) {
-        return res.status(404).json({
-          success: false,
-          message: "Application not found"
-        });
-      }
-      
-      // 3. Update Status
-      const previousStatus = application.status;
-      application.status = status;
-      
-      // 4. Update Timestamps Automatically
-      if (status === "submitted" && previousStatus === "draft") {
-        application.submittedAt = new Date();
-      }
-      else if ((status === "approved" || status === "rejected") &&
-                previousStatus === "underreview") {
-        application.processedAt = new Date();
-      }
-      
-      await application.save();
-      
-      // 5. Send Response
-      res.json({
-        success: true,
-        data: {
-          _id: application._id,
-          previousStatus,
-          newStatus: application.status,
-          submittedAt: application.submittedAt,
-          processedAt: application.processedAt
-        },
-        message: `Status changed from ${previousStatus} to ${status}`
-      });
-    } catch (error) {
-      console.error("Status update error:", error);
-      res.status(500).json({
-        success: false,
-        message: error.message || "Internal server error"
-      });
-    }
-  };
+    res.json(applicationsWithDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}; // Make sure to import mongoose at the top of your controller file
 
+const updateApplicationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = [
+      "draft",
+      "submitted",
+      "underreview",
+      "approved",
+      "rejected",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status. Allowed values: ${validStatuses.join(", ")}`,
+      });
+    }
+
+    // 2. Find Application
+    const application = await Application.findById(id);
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
+    }
+
+    // 3. Update Status
+    const previousStatus = application.status;
+    application.status = status;
+
+    // 4. Update Timestamps Automatically
+    if (status === "submitted" && previousStatus === "draft") {
+      application.submittedAt = new Date();
+    } else if (
+      (status === "approved" || status === "rejected") &&
+      previousStatus === "underreview"
+    ) {
+      application.processedAt = new Date();
+    }
+
+    await application.save();
+
+    // 5. Send Response
+    res.json({
+      success: true,
+      data: {
+        _id: application._id,
+        previousStatus,
+        newStatus: application.status,
+        submittedAt: application.submittedAt,
+        processedAt: application.processedAt,
+      },
+      message: `Status changed from ${previousStatus} to ${status}`,
+    });
+  } catch (error) {
+    console.error("Status update error:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    });
+  }
+};
 
 module.exports = {
+  downloadCertificate,
   updateApplicationStatus,
   savePersonalInfo,
   saveLocation,

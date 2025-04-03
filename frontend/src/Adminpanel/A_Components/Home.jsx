@@ -582,7 +582,7 @@ const Home = () => {
                                     View File
                                   </a>
                                 </div>
-                              </div>
+                              </div>  
                             </div>
                           ))}
                         </div>
