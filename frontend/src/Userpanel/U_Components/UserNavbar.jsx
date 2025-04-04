@@ -1,9 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; // Import NavLink
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../Assets/image/logo.png";
 import "../Assets/css/Userstyle.css";
 import { Navigate } from "react-router-dom";
 const UserNavbar = () => {
+  const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -19,9 +21,9 @@ const UserNavbar = () => {
     >
       <div className="container-fluid">
         {/* Logo and Title */}
-        <NavLink className="navbar-brand d-flex align-items-center" to="/">
+        <NavLink className="navbar-brand d-flex align-items-center" to="/user">
           <img
-            src={logo} // Use the imported logo
+            src={logo}
             alt="Logo"
             className="logo me-2"
             style={{
@@ -58,7 +60,8 @@ const UserNavbar = () => {
             {/* Home Link */}
             <li className="nav-item">
               <NavLink
-                to="/"
+                to="/user"
+                end
                 className={({ isActive }) =>
                   `nav-link text-white fw-medium mx-2 d-flex align-items-center hover-effect ${
                     isActive ? "active" : ""
@@ -73,7 +76,7 @@ const UserNavbar = () => {
             {/* Contact Us Link */}
             <li className="nav-item">
               <NavLink
-                to="/contactus"
+                to="/user/contactus"
                 className={({ isActive }) =>
                   `nav-link text-white fw-medium mx-2 d-flex align-items-center hover-effect ${
                     isActive ? "active" : ""
@@ -103,14 +106,20 @@ const UserNavbar = () => {
                 aria-labelledby="navbarDropdown"
               >
                 <li>
-                  <a className="dropdown-item hover-effect" href="#">
+                  <NavLink
+                    className="dropdown-item hover-effect"
+                    to="/user/profile"
+                  >
                     <i className="bi bi-person-circle me-2"></i>Profile
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item hover-effect" href="#">
+                  <NavLink
+                    className="dropdown-item hover-effect"
+                    to="/user/change-password"
+                  >
                     <i className="bi bi-key me-2"></i>Change Password
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
