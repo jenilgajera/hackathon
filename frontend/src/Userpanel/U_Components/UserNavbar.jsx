@@ -2,12 +2,12 @@ import React from "react";
 import { NavLink } from "react-router-dom"; // Import NavLink
 import logo from "../Assets/image/logo.png";
 import "../Assets/css/Userstyle.css";
-
+import { Navigate } from "react-router-dom";
 const UserNavbar = () => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/");
+    Navigate("/");
   };
 
   return (
@@ -119,7 +119,7 @@ const UserNavbar = () => {
                   <a
                     onClick={(e) => {
                       e.preventDefault();
-                      handleremoveToken();
+                      logout();
                     }}
                     className="dropdown-item hover-effect"
                     href="#"
