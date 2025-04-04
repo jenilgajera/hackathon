@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const authenticate = require("../middlewares/authMiddleware");
+
 const {
   savePersonalInfo,
   saveLocation,
@@ -16,7 +17,8 @@ const {
   getApplications,
   getApplicationDetails,
   getAllApplicationsWithDetails,
-  updateApplicationStatus
+  updateApplicationStatus,
+  downloadCertificate
 } = require("../Controllers/applicationController");
 const { uploadAttachments } = require("../Config/multerConfig");
 
@@ -28,7 +30,7 @@ router.post("/applications/site", authenticate, saveSite);
 router.post("/applications/project", authenticate, saveProject);
 router.post("/applications/fire-safety", authenticate, saveFireSafety);
 
-// Fixed the status update route (it was missing a "/" in original code)
+// Status update route
 router.post("/applications/:id/status", authenticate, updateApplicationStatus);
 
 router.post(
@@ -64,5 +66,8 @@ router.put("/applications/:id/submit", authenticate, submitApplication);
 router.get("/applications", authenticate, getApplications);
 router.get("/applications/:id", authenticate, getApplicationDetails);
 router.get("/getAllApplicationsWithDetails", getAllApplicationsWithDetails);
+
+// Direct PDF certificate download - no authentication required for easier access
+router.get("/applications/:id/certificate", downloadCertificate);
 
 module.exports = router;

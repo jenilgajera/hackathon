@@ -184,38 +184,59 @@ const UserHome = () => {
                 <tbody>
                   {applications.map((app) => (
                     <tr key={app.application._id || Math.random()}>
-                      <td>{app.application._id ? app.application._id.substring(18, 24) : "N/A"}</td>
+                      <td>
+                        {app.application._id
+                          ? app.application._id.substring(18, 24)
+                          : "N/A"}
+                      </td>
                       <td>{app.application.name || "Unknown"}</td>
                       <td>
                         <span
                           className={`badge ${
-                            app.status === "approved"
+                            app.application.status === "approved"
                               ? "bg-success"
-                              : app.status === "rejected"
+                              : app.application.status === "rejected"
                               ? "bg-danger"
-                              : app.status === "submitted"
+                              : app.application.status === "submitted"
                               ? "bg-primary"
-                              : app.status === "underreview"
+                              : app.application.status === "underreview"
                               ? "bg-warning"
                               : "bg-secondary"
                           }`}
                         >
-                          {app.status || "Pending"}
+                          {app.application.status || "Pending"}
                         </span>
                       </td>
                       <td>
                         {app.application.submittedAt
-                          ? new Date(app.application.submittedAt).toLocaleDateString()
+                          ? new Date(
+                              app.application.submittedAt
+                            ).toLocaleDateString()
                           : "Not submitted"}
                       </td>
                       <td>
-                        <button
-                          className="btn btn-sm btn-outline-primary"
-                          disabled={!app.application._id}
-                          onClick={() => navigate(`/application/${app._id}`)}
-                        >
-                          View
-                        </button>
+                        {app.application.status === "approved" ? (
+                          <button
+                            className="btn btn-sm btn-success"
+                            onClick={() =>
+                              navigate(
+                                `/application/${app.application._id}/qr-code`
+                              )
+                            }
+                          >
+                            Get QR
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            disabled={!app.application._id}
+                            onClick={() =>
+                              navigate(`/application/${app.application._id}`)
+                            }
+                          >
+                            View
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
