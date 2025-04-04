@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import L_navbar from "./L_navbar";
 import L_carousle from "./L_carousle";
 import L_home_heading from "./L_home_heading";
@@ -12,13 +12,13 @@ import L_Footer from "./L_Footer";
 
 const Landing_app = () => {
   return (
-    <BrowserRouter>
+    <>
       <L_navbar />
       <div className="container-fluid">
         <br />
         <Routes>
           <Route
-            path="/"
+            index
             element={
               <>
                 <L_carousle />
@@ -30,21 +30,21 @@ const Landing_app = () => {
               </>
             }
           />
-          <Route path="/register" element={<L_register />} />
-          <Route path="/login" element={<L_login />} />
+          <Route path="register" element={<L_register />} />
+          <Route path="login" element={<L_login />} />
         </Routes>
       </div>
       <ConditionalFooter />
       <br />
-    </BrowserRouter>
+    </>
   );
 };
 
 const ConditionalFooter = () => {
   const location = useLocation();
-  const noFooterRoutes = ["/register", "/login"]; // Single correct definition
+  const noFooterRoutes = ["/register", "/login"];
 
-  if (noFooterRoutes.includes(location.pathname.toLowerCase())) {
+  if (noFooterRoutes.includes(location.pathname)) {
     return null;
   }
 

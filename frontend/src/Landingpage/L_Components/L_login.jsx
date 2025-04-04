@@ -33,16 +33,19 @@ const L_login = () => {
 
       // Save token to localStorage
       localStorage.setItem("token", response.data.token);
-      
+
       // Save user data if needed
-      localStorage.setItem("user", JSON.stringify({
-        _id: response.data._id,
-        name: response.data.name,
-        email: response.data.email
-      }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email,
+        })
+      );
 
       // Redirect to dashboard or home page
-      navigate("/");
+      navigate("/user");
     } catch (err) {
       setError(
         err.response?.data?.message || "Login failed. Please try again."

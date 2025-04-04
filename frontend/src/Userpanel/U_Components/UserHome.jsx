@@ -220,7 +220,7 @@ const UserHome = () => {
                             className="btn btn-sm btn-success"
                             onClick={() =>
                               navigate(
-                                `/application/${app.application._id}/qr-code`
+                                `application/${app.application._id}/qr-code`
                               )
                             }
                           >
