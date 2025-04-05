@@ -20,32 +20,42 @@ export const RenewApplicationDetails = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`/api/applications/${applicationId}`);
-      setApplicationData(response.data);
+      const response = await axios.get(
+        `http://localhost:5000/api/applications/for-renewal/${applicationId}`
+      );
 
-      // Pre-fill form data
-      setFormData({
-        personalInfo: {
-          name: response.data.application.name || "",
-          mobile: response.data.application.mobile_number || "",
-          email: response.data.application.email || "",
-        },
-        locationInfo: {
-          district: response.data.location?.district || "",
-          plot: response.data.location?.plot || "",
-          area: response.data.location?.area || "",
-          landmark: response.data.location?.landmark || "",
-          taluka: response.data.location?.taluka || "",
-          pincode: response.data.location?.pincode || "",
-        },
-        architectInfo: {
-          architectName: response.data.architect?.name || "",
-          registrationNo: response.data.architect?.registrationNo || "",
-        },
-      });
+      if (response.data.success) {
+        setApplicationData(response.data.data);
+
+        // Pre-fill form data
+        setFormData({
+          personalInfo: {
+            name: response.data.data.application.name || "",
+            mobile: response.data.data.application.mobile_number || "",
+            email: response.data.data.application.email || "",
+          },
+          locationInfo: {
+            district: response.data.data.location?.district || "",
+            plot_details: response.data.data.location?.plot_details || "",
+            area: response.data.data.location?.area || "",
+            landmark: response.data.data.location?.landmark || "",
+            taluka: response.data.data.location?.taluka || "",
+            pin_code: response.data.data.location?.pin_code || "",
+          },
+          architectInfo: {
+            architectName: response.data.data.architect?.name || "",
+            registration_no:
+              response.data.data.architect?.registration_no || "",
+          },
+        });
+      } else {
+        setError(response.data.message || "Failed to fetch application data");
+      }
     } catch (err) {
       setError(
-        err.response?.data?.message || "Failed to fetch application data"
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to fetch application data"
       );
     } finally {
       setLoading(false);
@@ -65,14 +75,25 @@ export const RenewApplicationDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Create a new renewal application
-      const response = await axios.post("/api/applications/renew", {
-        originalApplicationId: applicationId,
-        ...formData,
-      });
-      alert("Renewal application submitted successfully!");
+      // For submitting renewal
+      const response = await axios.post(
+        "http://localhost:5000/api/applications/renew",
+        {
+          originalApplicationId: applicationId,
+          ...formData,
+        }
+      );
+
+      if (response.data.success) {
+        alert("Renewal application submitted successfully!");
+        // Optionally reset form or redirect
+      } else {
+        setError(response.data.message || "Failed to submit renewal");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to submit renewal");
+      setError(
+        err.response?.data?.message || err.message || "Failed to submit renewal"
+      );
     }
   };
 
@@ -244,7 +265,7 @@ export const RenewApplicationDetails = () => {
                       type="text"
                       className="form-control"
                       id="plot"
-                      value={formData.locationInfo.plot}
+                      value={formData.locationInfo.plot_details}
                       onChange={(e) =>
                         handleInputChange(
                           "locationInfo",
@@ -325,18 +346,18 @@ export const RenewApplicationDetails = () => {
 
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label htmlFor="pincode" className="form-label">
+                    <label htmlFor="pin_code" className="form-label">
                       Pin Code*
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="pincode"
-                      value={formData.locationInfo.pincode}
+                      id="pin_code"
+                      value={formData.locationInfo.pin_code}
                       onChange={(e) =>
                         handleInputChange(
                           "locationInfo",
-                          "pincode",
+                          "pin_code",
                           e.target.value
                         )
                       }
@@ -389,18 +410,18 @@ export const RenewApplicationDetails = () => {
 
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label htmlFor="registrationNo" className="form-label">
+                    <label htmlFor="registration_no" className="form-label">
                       Registration No.*
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="registrationNo"
-                      value={formData.architectInfo.registrationNo}
+                      id="registration_no"
+                      value={formData.architectInfo.registration_no}
                       onChange={(e) =>
                         handleInputChange(
                           "architectInfo",
-                          "registrationNo",
+                          "registration_no",
                           e.target.value
                         )
                       }

@@ -1,4 +1,5 @@
 // controllers/applicationController.js
+const mongoose = require("mongoose"); // Add this line at the top
 const Application = require("../Models/Application");
 const Location = require("../Models/Location");
 const Architect = require("../Models/Architect");
@@ -13,31 +14,40 @@ const path = require("path");
 const QRCode = require("qrcode");
 const { uploadAttachments } = require("../Config/multerConfig");
 
-
-const generateCertificatePDF = (application, certificate, location, architect, site, project, fireSafety) => {
+const generateCertificatePDF = (
+  application,
+  certificate,
+  location,
+  architect,
+  site,
+  project,
+  fireSafety
+) => {
   return new Promise(async (resolve, reject) => {
     try {
       const doc = new PDFDocument({
-        size: 'A4',
+        size: "A4",
         margins: { top: 50, bottom: 50, left: 50, right: 50 },
         info: {
-          Title: 'Fire Safety Certificate',
-          Author: 'Fire Safety Department',
-          Subject: 'Certificate of Compliance',
-          Keywords: 'fire, safety, certificate, compliance',
-          CreationDate: new Date()
-        }
+          Title: "Fire Safety Certificate",
+          Author: "Fire Safety Department",
+          Subject: "Certificate of Compliance",
+          Keywords: "fire, safety, certificate, compliance",
+          CreationDate: new Date(),
+        },
       });
 
       const buffers = [];
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => {
+      doc.on("data", buffers.push.bind(buffers));
+      doc.on("end", () => {
         const pdfData = Buffer.concat(buffers);
         resolve(pdfData);
       });
 
       // Generate QR code
-      const verificationUrl = `${process.env.BASE_URL || 'http://localhost:5000'}/api/certificates/verify/${certificate.certificateNumber}`;
+      const verificationUrl = `${
+        process.env.BASE_URL || "http://localhost:5000"
+      }/api/certificates/verify/${certificate.certificateNumber}`;
       const qrCodeDataURL = await QRCode.toDataURL(verificationUrl);
 
       // Add border
@@ -46,163 +56,214 @@ const generateCertificatePDF = (application, certificate, location, architect, s
       // Header with QR code
       doc.image(qrCodeDataURL, {
         fit: [80, 80],
-        align: 'right',
+        align: "right",
         x: doc.page.width - 100,
-        y: 40
+        y: 40,
       });
 
       // Certificate Title
-      doc.fontSize(24)
-         .fillColor('#582105')
-         .text('FIRE SAFETY CERTIFICATE', { 
-           align: 'center', 
-           underline: true 
-         });
+      doc.fontSize(24).fillColor("#582105").text("FIRE SAFETY CERTIFICATE", {
+        align: "center",
+        underline: true,
+      });
 
       // Certificate Number
       doc.moveDown(0.5);
-      doc.fontSize(14)
-         .fillColor('#333')
-         .text(`Certificate No: ${certificate.certificateNumber}`, { 
-           align: 'center' 
-         });
+      doc
+        .fontSize(14)
+        .fillColor("#333")
+        .text(`Certificate No: ${certificate.certificateNumber}`, {
+          align: "center",
+        });
 
       // Horizontal line
       doc.moveDown(1);
-      doc.moveTo(50, doc.y)
-         .lineTo(doc.page.width - 50, doc.y)
-         .stroke();
+      doc
+        .moveTo(50, doc.y)
+        .lineTo(doc.page.width - 50, doc.y)
+        .stroke();
       doc.moveDown(1);
 
       // Applicant Details Section
-      doc.fontSize(16)
-         .fillColor('#582105')
-         .text('APPLICANT DETAILS', { underline: true });
+      doc
+        .fontSize(16)
+        .fillColor("#582105")
+        .text("APPLICANT DETAILS", { underline: true });
       doc.moveDown(0.5);
 
-      addDetailRow(doc, 'Full Name:', application.name);
-      addDetailRow(doc, 'Email:', application.email);
-      addDetailRow(doc, 'Mobile:', application.mobile_number);
+      addDetailRow(doc, "Full Name:", application.name);
+      addDetailRow(doc, "Email:", application.email);
+      addDetailRow(doc, "Mobile:", application.mobile_number);
       doc.moveDown(1);
 
       // Property Details Section
-      doc.fontSize(16)
-         .fillColor('#582105')
-         .text('PROPERTY DETAILS', { underline: true });
+      doc
+        .fontSize(16)
+        .fillColor("#582105")
+        .text("PROPERTY DETAILS", { underline: true });
       doc.moveDown(0.5);
 
       if (location) {
-        addDetailRow(doc, 'Address:', `${location.plot_details}, ${location.landmark}`);
-        addDetailRow(doc, 'Area:', location.area);
-        addDetailRow(doc, 'District:', location.district);
-        addDetailRow(doc, 'Taluka:', location.taluka);
-        addDetailRow(doc, 'Village:', location.village);
-        addDetailRow(doc, 'Pincode:', location.pin_code);
+        addDetailRow(
+          doc,
+          "Address:",
+          `${location.plot_details}, ${location.landmark}`
+        );
+        addDetailRow(doc, "Area:", location.area);
+        addDetailRow(doc, "District:", location.district);
+        addDetailRow(doc, "Taluka:", location.taluka);
+        addDetailRow(doc, "Village:", location.village);
+        addDetailRow(doc, "Pincode:", location.pin_code);
       }
       doc.moveDown(1);
 
       // Architect Details
       if (architect) {
-        doc.fontSize(16)
-           .fillColor('#582105')
-           .text('ARCHITECT DETAILS', { underline: true });
+        doc
+          .fontSize(16)
+          .fillColor("#582105")
+          .text("ARCHITECT DETAILS", { underline: true });
         doc.moveDown(0.5);
-        
-        addDetailRow(doc, 'Name:', architect.name);
-        addDetailRow(doc, 'Registration No:', architect.registration_no);
+
+        addDetailRow(doc, "Name:", architect.name);
+        addDetailRow(doc, "Registration No:", architect.registration_no);
         doc.moveDown(1);
       }
 
       // Site Details
       if (site) {
-        doc.fontSize(16)
-           .fillColor('#582105')
-           .text('SITE DETAILS', { underline: true });
+        doc
+          .fontSize(16)
+          .fillColor("#582105")
+          .text("SITE DETAILS", { underline: true });
         doc.moveDown(0.5);
-        
-        addDetailRow(doc, 'Project Name:', site.project_name);
-        addDetailRow(doc, 'Area Type:', site.area_type);
-        addDetailRow(doc, 'Survey No:', site.survey_number);
-        addDetailRow(doc, 'FP No:', site.fp_number);
-        addDetailRow(doc, 'TP No:', site.tp_number);
-        addDetailRow(doc, 'Coordinates:', `${site.latitude}, ${site.longitude}`);
+
+        addDetailRow(doc, "Project Name:", site.project_name);
+        addDetailRow(doc, "Area Type:", site.area_type);
+        addDetailRow(doc, "Survey No:", site.survey_number);
+        addDetailRow(doc, "FP No:", site.fp_number);
+        addDetailRow(doc, "TP No:", site.tp_number);
+        addDetailRow(
+          doc,
+          "Coordinates:",
+          `${site.latitude}, ${site.longitude}`
+        );
         doc.moveDown(1);
       }
 
       // Building Details
       if (project) {
-        doc.fontSize(16)
-           .fillColor('#582105')
-           .text('BUILDING DETAILS', { underline: true });
+        doc
+          .fontSize(16)
+          .fillColor("#582105")
+          .text("BUILDING DETAILS", { underline: true });
         doc.moveDown(0.5);
-        
-        addDetailRow(doc, 'Occupancy Type:', project.occupancy_type);
-        addDetailRow(doc, 'Site Area:', `${project.site_area} sq.m`);
-        addDetailRow(doc, 'Road Width:', `${project.road_width} m`);
-        addDetailRow(doc, 'Building Blocks:', project.building_blocks);
-        addDetailRow(doc, 'Entrance Dimensions:', `${project.entrance_width}m x ${project.entrance_height}m`);
+
+        addDetailRow(doc, "Occupancy Type:", project.occupancy_type);
+        addDetailRow(doc, "Site Area:", `${project.site_area} sq.m`);
+        addDetailRow(doc, "Road Width:", `${project.road_width} m`);
+        addDetailRow(doc, "Building Blocks:", project.building_blocks);
+        addDetailRow(
+          doc,
+          "Entrance Dimensions:",
+          `${project.entrance_width}m x ${project.entrance_height}m`
+        );
         doc.moveDown(1);
       }
 
       // Fire Safety Features
       if (fireSafety) {
-        doc.fontSize(16)
-           .fillColor('#582105')
-           .text('FIRE SAFETY FEATURES', { underline: true });
+        doc
+          .fontSize(16)
+          .fillColor("#582105")
+          .text("FIRE SAFETY FEATURES", { underline: true });
         doc.moveDown(0.5);
-        
+
         const features = [];
-        if (fireSafety.fire_extinguishers) features.push('Fire Extinguishers');
-        if (fireSafety.fire_alarm_system) features.push('Fire Alarm System');
-        if (fireSafety.smoke_detectors) features.push('Smoke Detectors');
-        if (fireSafety.evacuation_plan) features.push('Evacuation Plan');
-        
-        addDetailRow(doc, 'Installed Features:', features.join(', ') || 'None');
-        addDetailRow(doc, 'Extinguisher Last Service:', new Date(fireSafety.extinguisher_date).toLocaleDateString());
-        addDetailRow(doc, 'Fire Drills Conducted:', fireSafety.fire_drills ? 'Yes' : 'No');
-        addDetailRow(doc, 'Staff Training:', fireSafety.training_received ? 'Yes' : 'No');
+        if (fireSafety.fire_extinguishers) features.push("Fire Extinguishers");
+        if (fireSafety.fire_alarm_system) features.push("Fire Alarm System");
+        if (fireSafety.smoke_detectors) features.push("Smoke Detectors");
+        if (fireSafety.evacuation_plan) features.push("Evacuation Plan");
+
+        addDetailRow(doc, "Installed Features:", features.join(", ") || "None");
+        addDetailRow(
+          doc,
+          "Extinguisher Last Service:",
+          new Date(fireSafety.extinguisher_date).toLocaleDateString()
+        );
+        addDetailRow(
+          doc,
+          "Fire Drills Conducted:",
+          fireSafety.fire_drills ? "Yes" : "No"
+        );
+        addDetailRow(
+          doc,
+          "Staff Training:",
+          fireSafety.training_received ? "Yes" : "No"
+        );
         doc.moveDown(1);
       }
 
       // Certificate Validity
-      doc.fontSize(16)
-         .fillColor('#582105')
-         .text('CERTIFICATE VALIDITY', { underline: true });
+      doc
+        .fontSize(16)
+        .fillColor("#582105")
+        .text("CERTIFICATE VALIDITY", { underline: true });
       doc.moveDown(0.5);
-      
-      addDetailRow(doc, 'Issued Date:', certificate.issuedDate.toLocaleDateString());
-      addDetailRow(doc, 'Valid Until:', certificate.expiryDate.toLocaleDateString());
+
+      addDetailRow(
+        doc,
+        "Issued Date:",
+        certificate.issuedDate.toLocaleDateString()
+      );
+      addDetailRow(
+        doc,
+        "Valid Until:",
+        certificate.expiryDate.toLocaleDateString()
+      );
       doc.moveDown(2);
 
       // Certification Statement
-      doc.fontSize(12)
-         .text('This is to certify that the above-mentioned property has been inspected and found to comply with the Fire Safety Regulations and Standards. This certificate confirms that the property meets all required fire safety measures and protocols.', {
-           align: 'justify'
-         });
+      doc
+        .fontSize(12)
+        .text(
+          "This is to certify that the above-mentioned property has been inspected and found to comply with the Fire Safety Regulations and Standards. This certificate confirms that the property meets all required fire safety measures and protocols.",
+          {
+            align: "justify",
+          }
+        );
       doc.moveDown();
-      doc.text('This certificate is valid for one year from the date of issue and must be renewed before expiration to maintain compliance.', {
-        align: 'justify'
-      });
+      doc.text(
+        "This certificate is valid for one year from the date of issue and must be renewed before expiration to maintain compliance.",
+        {
+          align: "justify",
+        }
+      );
 
       // Signature Section
       doc.moveDown(3);
-      doc.fontSize(12).text('_________________________', { align: 'right' });
-      doc.fontSize(12).text('Fire Safety Officer', { align: 'right' });
-      doc.fontSize(10).text('(Signature & Stamp)', { align: 'right' });
+      doc.fontSize(12).text("_________________________", { align: "right" });
+      doc.fontSize(12).text("Fire Safety Officer", { align: "right" });
+      doc.fontSize(10).text("(Signature & Stamp)", { align: "right" });
 
       // Footer
       const footerY = doc.page.height - 60;
-      doc.fontSize(9)
-         .text('This is an official document issued by the Fire Safety Department. Tampering with this certificate is a punishable offense.', 50, footerY, {
-           align: 'center',
-           width: doc.page.width - 100
-         });
+      doc
+        .fontSize(9)
+        .text(
+          "This is an official document issued by the Fire Safety Department. Tampering with this certificate is a punishable offense.",
+          50,
+          footerY,
+          {
+            align: "center",
+            width: doc.page.width - 100,
+          }
+        );
       doc.moveDown(0.5);
-      doc.fontSize(9)
-         .text(`Verify this certificate at: ${verificationUrl}`, {
-           align: 'center',
-           width: doc.page.width - 100
-         });
+      doc.fontSize(9).text(`Verify this certificate at: ${verificationUrl}`, {
+        align: "center",
+        width: doc.page.width - 100,
+      });
 
       doc.end();
     } catch (error) {
@@ -214,11 +275,8 @@ const generateCertificatePDF = (application, certificate, location, architect, s
 // Helper function to add detail rows
 function addDetailRow(doc, label, value, x = 50, valueX = 200) {
   const y = doc.y;
-  doc.fontSize(12)
-     .font('Helvetica-Bold')
-     .text(label, x, y);
-  doc.font('Helvetica')
-     .text(value || 'N/A', valueX, y);
+  doc.fontSize(12).font("Helvetica-Bold").text(label, x, y);
+  doc.font("Helvetica").text(value || "N/A", valueX, y);
   doc.moveDown(0.5);
 }
 
@@ -227,13 +285,16 @@ const downloadCertificate = async (req, res) => {
     const { id } = req.params;
 
     // Fetch application with user data
-    const application = await Application.findById(id).populate('user', 'name email');
+    const application = await Application.findById(id).populate(
+      "user",
+      "name email"
+    );
     if (!application) {
-      return res.status(404).json({ message: 'Application not found' });
+      return res.status(404).json({ message: "Application not found" });
     }
 
-    if (application.status !== 'approved') {
-      return res.status(403).json({ message: 'Application not approved' });
+    if (application.status !== "approved") {
+      return res.status(403).json({ message: "Application not approved" });
     }
 
     // Fetch all related data
@@ -242,7 +303,7 @@ const downloadCertificate = async (req, res) => {
       Architect.findOne({ application: id }),
       Site.findOne({ application: id }),
       Project.findOne({ application: id }),
-      FireSafety.findOne({ application: id })
+      FireSafety.findOne({ application: id }),
     ]);
 
     // Check or create certificate
@@ -252,36 +313,37 @@ const downloadCertificate = async (req, res) => {
         application: id,
         certificateNumber: `FSC-${Date.now().toString().slice(-6)}`,
         issuedDate: new Date(),
-        expiryDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        isValid: true
+        expiryDate: new Date(
+          new Date().setFullYear(new Date().getFullYear() + 1)
+        ),
+        isValid: true,
       });
       await certificate.save();
     }
 
     // Generate PDF
     const pdfBuffer = await generateCertificatePDF(
-      application, 
-      certificate, 
-      location, 
-      architect, 
-      site, 
-      project, 
+      application,
+      certificate,
+      location,
+      architect,
+      site,
+      project,
       fireSafety
     );
 
     // Set response headers
-    res.contentType('application/pdf');
+    res.contentType("application/pdf");
     res.setHeader(
-      'Content-Disposition',
+      "Content-Disposition",
       `attachment; filename=FireSafetyCertificate_${certificate.certificateNumber}.pdf`
     );
     res.send(pdfBuffer);
-
   } catch (error) {
-    console.error('Download certificate error:', error);
-    res.status(500).json({ 
-      message: 'Failed to generate certificate',
-      error: error.message 
+    console.error("Download certificate error:", error);
+    res.status(500).json({
+      message: "Failed to generate certificate",
+      error: error.message,
     });
   }
 };
@@ -904,6 +966,151 @@ const updateApplicationStatus = async (req, res) => {
   }
 };
 
+// Get application details for renewal
+// controllers/applicationController.js
+const getApplicationForRenewal = async (req, res) => {
+  try {
+    // Validate the ID format first
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid application ID format",
+      });
+    }
+
+    const application = await Application.findById(req.params.id)
+      .populate("user")
+      .lean();
+
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        message: "Application not found",
+      });
+    }
+
+    // Check if the application is approved (only approved applications can be renewed)
+    if (application.status !== "approved") {
+      return res.status(400).json({
+        success: false,
+        message: "Only approved applications can be renewed",
+        currentStatus: application.status,
+      });
+    }
+
+    // Get all related data
+    const [location, architect, site, project, fireSafety, attachments] =
+      await Promise.all([
+        Location.findOne({ application: application._id }).lean(),
+        Architect.findOne({ application: application._id }).lean(),
+        Site.findOne({ application: application._id }).lean(),
+        Project.findOne({ application: application._id }).lean(),
+        FireSafety.findOne({ application: application._id }).lean(),
+        Attachment.find({ application: application._id }).lean(),
+      ]);
+
+    res.json({
+      success: true,
+      data: {
+        application,
+        location,
+        architect,
+        site,
+        project,
+        fireSafety,
+        attachments,
+      },
+    });
+  } catch (error) {
+    console.error("Error in getApplicationForRenewal:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to fetch application data",
+    });
+  }
+};
+
+const createRenewalApplication = async (req, res) => {
+  try {
+    const { originalApplicationId, personalInfo, locationInfo, architectInfo } =
+      req.body;
+
+    // Validate originalApplicationId
+    if (!mongoose.Types.ObjectId.isValid(originalApplicationId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid original application ID format",
+      });
+    }
+
+    // Verify original application exists and is approved
+    const originalApp = await Application.findById(originalApplicationId);
+    if (!originalApp) {
+      return res.status(404).json({
+        success: false,
+        message: "Original application not found",
+      });
+    }
+
+    if (originalApp.status !== "approved") {
+      return res.status(400).json({
+        success: false,
+        message: "Only approved applications can be renewed",
+        currentStatus: originalApp.status,
+      });
+    }
+
+    // Create new renewal application
+    const renewalApplication = new Application({
+      user: req.user.id,
+      status: "submitted",
+      applicationType: "renewal",
+      originalApplication: originalApplicationId,
+      name: personalInfo.name,
+      mobile_number: personalInfo.mobile,
+      email: personalInfo.email,
+    });
+
+    await renewalApplication.save();
+
+    // Create location info for renewal
+    const renewalLocation = new Location({
+      application: renewalApplication._id,
+      district: locationInfo.district,
+      plot_details: locationInfo.plot_details,
+      area: locationInfo.area,
+      landmark: locationInfo.landmark,
+      taluka: locationInfo.taluka,
+      pin_code: locationInfo.pin_code,
+    });
+    await renewalLocation.save();
+
+    // Create architect info for renewal
+    const renewalArchitect = new Architect({
+      application: renewalApplication._id,
+      name: architectInfo.architectName,
+      registration_no: architectInfo.registration_no,
+    });
+    await renewalArchitect.save();
+
+    res.status(201).json({
+      success: true,
+      data: {
+        application: renewalApplication,
+        location: renewalLocation,
+        architect: renewalArchitect,
+      },
+      message: "Renewal application created successfully",
+    });
+  } catch (error) {
+    console.error("Error in createRenewalApplication:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message || "Failed to create renewal application",
+    });
+  }
+};
+
 module.exports = {
   downloadCertificate,
   updateApplicationStatus,
@@ -920,4 +1127,6 @@ module.exports = {
   getApplications,
   getApplicationDetails,
   getAllApplicationsWithDetails,
+  getApplicationForRenewal,
+  createRenewalApplication,
 };

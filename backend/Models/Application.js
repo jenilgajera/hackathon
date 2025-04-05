@@ -12,7 +12,7 @@ const ApplicationSchema = new mongoose.Schema({
   email: String,
   status: {
     type: String,
-    enum: ["draft", "submitted","underreview", "approved", "rejected"],
+    enum: ["draft", "submitted", "underreview", "approved", "rejected"],
     default: "draft",
   },
   currentStep: {
@@ -22,6 +22,19 @@ const ApplicationSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  applicationType: {
+    type: String,
+    enum: ["new", "renewal", "modification"],
+    default: "new",
+  },
+  originalApplication: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Application",
+  },
+  renewalCount: {
+    type: Number,
+    default: 0,
   },
   submittedAt: Date,
 });

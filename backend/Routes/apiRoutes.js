@@ -18,7 +18,9 @@ const {
   getApplicationDetails,
   getAllApplicationsWithDetails,
   updateApplicationStatus,
-  downloadCertificate
+  downloadCertificate,
+  getApplicationForRenewal,
+  createRenewalApplication,
 } = require("../Controllers/applicationController");
 const { uploadAttachments } = require("../Config/multerConfig");
 
@@ -69,5 +71,9 @@ router.get("/getAllApplicationsWithDetails", getAllApplicationsWithDetails);
 
 // Direct PDF certificate download - no authentication required for easier access
 router.get("/applications/:id/certificate", downloadCertificate);
+
+// Renewal routes - make sure these are under the /applications prefix
+router.get('/applications/for-renewal/:id', authenticate, getApplicationForRenewal);
+router.post('/applications/renew', authenticate, createRenewalApplication);
 
 module.exports = router;
